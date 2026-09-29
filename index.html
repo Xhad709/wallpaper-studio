@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="做分层纸卡风格的手机锁屏壁纸：选配色、改文字、换字体，导出高清 PNG。">
+<meta name="apple-mobile-web-app-title" content="叠卡壁纸">
+<meta name="theme-color" content="#e8ebea">
+<title>叠卡壁纸工坊</title>
+<style>
+:root{
+  --sans:"Archivo","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --ground:#e8ebea;
+  --field:#fbfcfb;
+  --ink:#1a2126;
+  --muted:#59646a;
+  --line:#d0d7d4;
+  --accent:#2b5a8a;
+  --phone-shadow:0 40px 70px -34px rgba(18,32,46,.55),0 14px 28px -16px rgba(18,32,46,.35);
+  --scrim:rgba(14,20,26,.62);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#121618;--field:#171b1e;--ink:#e6eae8;--muted:#98a2a7;--line:#2a3135;--accent:#8db2d8;
+    --phone-shadow:0 40px 70px -30px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.07);
+    --scrim:rgba(0,0,0,.74);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121618;--field:#171b1e;--ink:#e6eae8;--muted:#98a2a7;--line:#2a3135;--accent:#8db2d8;
+  --phone-shadow:0 40px 70px -30px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.07);
+  --scrim:rgba(0,0,0,.74);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--ground);color:var(--ink);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+.app{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
+
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 22px;margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.top h1{margin:0;font-size:22px;font-weight:800;letter-spacing:.02em;text-wrap:balance}
+.top p{margin:0;color:var(--muted);max-width:62ch}
+
+.work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:44px;align-items:start}
+.stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);display:flex;flex-direction:column;align-items:center;gap:16px}
+.phone{--ar:.4614;position:relative;width:min(100%,calc(min(74vh,760px) * var(--ar)));aspect-ratio:1290/2796;border-radius:13%/6%;overflow:hidden;background:#20262b;box-shadow:var(--phone-shadow)}
+.phone canvas{display:block;width:100%;height:100%;object-fit:contain}
+
+.lock{position:absolute;inset:0;pointer-events:none;container-type:inline-size;color:#fff;font-family:-apple-system,"SF Pro Display","PingFang SC",system-ui,sans-serif;text-shadow:0 1px 14px rgba(0,0,0,.14)}
+.lk-island{position:absolute;top:1.3%;left:50%;transform:translateX(-50%);width:31cqw;height:8.6cqw;border-radius:5cqw;background:#050505}
+.lk-date{position:absolute;top:7.6%;left:0;right:0;text-align:center;font-size:5.1cqw;font-weight:600;opacity:.92}
+.lk-time{position:absolute;top:9.7%;left:0;right:0;text-align:center;font-size:24cqw;font-weight:700;letter-spacing:-.02em;line-height:1}
+.lk-btn{position:absolute;bottom:4.7%;width:11.6cqw;height:11.6cqw;border-radius:50%;background:rgba(0,0,0,.24);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.lk-btn.l{left:12%}.lk-btn.r{right:12%}
+.lk-bar{position:absolute;bottom:1.1%;left:50%;transform:translateX(-50%);width:36cqw;height:1.3cqw;border-radius:1cqw;background:rgba(255,255,255,.92)}
+
+.stage-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;width:100%;max-width:460px}
+.stage-foot{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.02em}
+.custom{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.custom input{width:84px}
+
+select,input[type=text],input[type=number],textarea{font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:9px;padding:9px 11px;width:100%}
+select{width:auto;max-width:100%;padding-right:28px}
+textarea{resize:vertical;min-height:72px;line-height:1.45}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.primary{font:inherit;font-weight:600;background:var(--ink);color:var(--ground);border:0;border-radius:999px;padding:10px 22px;cursor:pointer}
+.primary:disabled{opacity:.55;cursor:progress}
+.ghost{font:inherit;font-size:13px;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;text-decoration:none}
+.ghost:hover{border-color:var(--muted)}
+
+.panel{display:flex;flex-direction:column}
+.group{display:flex;flex-direction:column;gap:12px;padding-block:20px;border-top:1px solid var(--line)}
+.group:first-child{border-top:0;padding-top:0}
+.gh{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.group h2{margin:0;font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--muted)}
+
+.presets{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.preset{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;color:var(--muted);font:inherit;font-size:12px;cursor:pointer}
+.preset canvas{display:block;width:100%;aspect-ratio:132/286;border-radius:8px;box-shadow:0 6px 14px -8px rgba(0,0,0,.45);outline:2px solid transparent;outline-offset:2px;transition:outline-color .15s}
+.preset:hover canvas{outline-color:var(--line)}
+.preset[aria-pressed="true"]{color:var(--ink);font-weight:600}
+.preset[aria-pressed="true"] canvas{outline-color:var(--ink)}
+.preset:focus-visible{outline:none}
+.preset:focus-visible canvas{outline-color:var(--accent)}
+
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.flabel{font-size:13px;color:var(--muted)}
+
+.seg{display:flex;gap:3px;padding:3px;background:var(--field);border:1px solid var(--line);border-radius:11px}
+.seg label{position:relative;flex:1;min-width:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{display:block;text-align:center;padding:7px 6px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .15s,color .15s}
+.seg span:hover{background:color-mix(in srgb,var(--line) 55%,transparent)}
+.seg input:checked+span{background:var(--ink);color:var(--ground)}
+.seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:1px}
+
+.fontgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px;max-height:320px;overflow:auto;overscroll-behavior:contain;padding:2px;margin:-2px}
+.fg-head{grid-column:1/-1;font-size:11px;letter-spacing:.08em;color:var(--muted);padding:10px 2px 0}
+.fg-head:first-child{padding-top:0}
+.fchip{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;padding:7px 10px 6px;border:1px solid var(--line);border-radius:9px;background:var(--field);color:var(--ink);cursor:pointer;text-align:left}
+.fchip .fs{display:block;max-width:100%;font-size:18px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fchip .fn{font:11px/1.3 var(--sans);color:var(--muted)}
+.fchip:hover{border-color:var(--muted)}
+.fchip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.fchip[data-state="loading"]{opacity:.45;cursor:progress}
+.fnote{margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
+.chk input{accent-color:var(--ink);width:15px;height:15px;margin:0}
+.chk:has(input:disabled){opacity:.5;cursor:default}
+
+.range{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 12px}
+.range label{font-size:13px;color:var(--muted)}
+.range output{font-family:var(--mono);font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums}
+.range input{grid-column:1/-1;width:100%;accent-color:var(--ink);margin:0}
+
+.colors{display:flex;flex-direction:column;gap:8px}
+.crow{display:grid;grid-template-columns:38px 1fr 104px;align-items:center;gap:12px}
+.crow label{font-size:13px}
+.crow input[type=color]{width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:9px;background:none;cursor:pointer}
+.crow input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.crow input[type=color]::-webkit-color-swatch{border:0;border-radius:8px}
+.crow input[type=color]::-moz-color-swatch{border:0;border-radius:8px}
+.crow .hex{font-family:var(--mono);font-size:12px;text-transform:uppercase;padding:8px 10px}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translate(-50%,12px);background:var(--ink);color:var(--ground);padding:9px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.sheet{position:fixed;inset:0;z-index:10;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:16px}
+.sheet-card{background:var(--ground);border-radius:16px;padding:18px;max-width:420px;width:100%;max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sheet-head h3{margin:0;font-size:16px}
+.sheet p{margin:0;color:var(--muted);font-size:13px}
+.sheet img{display:block;width:auto;max-width:100%;max-height:62vh;margin:0 auto;border-radius:12px}
+.sheet-actions{display:flex;justify-content:center}
+
+@media (max-width:860px){
+  .work{grid-template-columns:minmax(0,1fr);gap:28px}
+  .stage{position:static}
+  .phone{width:min(100%,calc(min(62vh,560px) * var(--ar)))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1>叠卡壁纸工坊</h1>
+    <p>上半屏留给锁屏时钟，文字印在下面那张卡片上。选好配色、改完文字，就能存成 PNG。</p>
+  </header>
+
+  <div class="work">
+    <section class="stage" aria-label="预览">
+      <div class="phone" id="phone">
+        <canvas id="cv" role="img" aria-label="壁纸预览"></canvas>
+        <div class="lock" id="lock" aria-hidden="true">
+          <div class="lk-island"></div>
+          <div class="lk-date" id="lkDate"></div>
+          <div class="lk-time" id="lkTime"></div>
+          <div class="lk-btn l"></div><div class="lk-btn r"></div>
+          <div class="lk-bar"></div>
+        </div>
+      </div>
+      <div class="stage-bar">
+        <select id="device" aria-label="导出尺寸"></select>
+        <div class="custom" id="customBox" hidden>
+          <input id="cw" type="number" inputmode="numeric" min="360" max="4096" aria-label="宽度（像素）">
+          <span>×</span>
+          <input id="ch" type="number" inputmode="numeric" min="360" max="4096" aria-label="高度（像素）">
+        </div>
+        <button type="button" class="primary" id="saveBtn">保存 PNG</button>
+      </div>
+      <div class="stage-foot">
+        <label class="chk"><input type="checkbox" id="clock"> 预览锁屏时钟（不会导出）</label>
+        <span class="mono" id="dimLabel"></span>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="设置">
+      <div class="group">
+        <div class="gh"><h2>配色方案</h2><button type="button" class="ghost" id="shuffle">随机一组</button></div>
+        <div class="presets" id="presets"></div>
+      </div>
+
+      <div class="group">
+        <h2>版式</h2>
+        <div class="seg" role="radiogroup" aria-label="版式">
+          <label><input type="radio" name="layout" value="stack"><span>叠纸</span></label>
+          <label><input type="radio" name="layout" value="frame3"><span>框格 · 三段</span></label>
+          <label><input type="radio" name="layout" value="frame2"><span>框格 · 两段</span></label>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>文字</h2>
+        <div class="field"><label for="title">标题</label><input id="title" type="text" maxlength="40" autocomplete="off"></div>
+        <div class="field" data-only="stack"><label for="subtitle">副标题</label><input id="subtitle" type="text" maxlength="40" autocomplete="off"></div>
+        <div class="field">
+          <span class="flabel" id="iconLbl">小图标</span>
+          <div class="seg" role="radiogroup" aria-labelledby="iconLbl">
+            <label><input type="radio" name="icon" value="none"><span>无</span></label>
+            <label><input type="radio" name="icon" value="sun"><span>太阳</span></label>
+            <label><input type="radio" name="icon" value="spark"><span>星芒</span></label>
+            <label><input type="radio" name="icon" value="heart"><span>爱心</span></label>
+            <label><input type="radio" name="icon" value="ring"><span>圆环</span></label>
+          </div>
+        </div>
+        <div class="field" data-only="stack"><label for="quote">小字（可换行）</label><textarea id="quote" rows="3" maxlength="200"></textarea></div>
+        <div class="range"><label for="r-size">标题字号</label><output id="o-size" for="r-size"></output><input type="range" id="r-size" min="70" max="140" step="1"></div>
+        <div class="range" data-only="stack"><label for="r-qsize">小字字号</label><output id="o-qsize" for="r-qsize"></output><input type="range" id="r-qsize" min="70" max="170" step="1"></div>
+      </div>
+
+      <div class="group">
+        <h2>字体</h2>
+        <div class="seg" role="radiogroup" aria-label="要换字体的文字" data-only="stack">
+          <label><input type="radio" name="ftarget" value="font"><span>标题</span></label>
+          <label><input type="radio" name="ftarget" value="sfont"><span>副标题</span></label>
+          <label><input type="radio" name="ftarget" value="qfont"><span>小字</span></label>
+        </div>
+        <div class="fontgrid" id="fontgrid" role="group" aria-label="字体列表"></div>
+        <p class="fnote" id="fontNote" aria-live="polite"></p>
+        <label class="chk"><input type="checkbox" id="upper"> 标题里的英文全部大写</label>
+      </div>
+
+      <div class="group" data-only="stack">
+        <h2>分割线</h2>
+        <div class="seg" role="radiogroup" aria-label="分割线样式">
+          <label><input type="radio" name="rule" value="none"><span>无</span></label>
+          <label><input type="radio" name="rule" value="solid"><span>实线</span></label>
+          <label><input type="radio" name="rule" value="dashed"><span>虚线</span></label>
+          <label><input type="radio" name="rule" value="dotted"><span>圆点</span></label>
+          <label><input type="radio" name="rule" value="double"><span>双线</span></label>
+        </div>
+        <div class="range"><label for="r-rlen">长度（占屏宽）</label><output id="o-rlen" for="r-rlen"></output><input type="range" id="r-rlen" min="5" max="81" step="0.5"></div>
+        <div class="range"><label for="r-rthick">粗细</label><output id="o-rthick" for="r-rthick"></output><input type="range" id="r-rthick" min="1" max="10" step="1"></div>
+      </div>
+
+      <div class="group">
+        <h2>颜色</h2>
+        <div class="colors" id="colors"></div>
+      </div>
+
+      <div class="group">
+        <h2>质感</h2>
+        <div class="range"><label for="r-texture">纸纹</label><output id="o-texture" for="r-texture"></output><input type="range" id="r-texture" min="0" max="100" step="1"></div>
+        <div class="range"><label for="r-shadow">光影</label><output id="o-shadow" for="r-shadow"></output><input type="range" id="r-shadow" min="0" max="100" step="1"></div>
+        <div class="range"><label for="r-radius">圆角</label><output id="o-radius" for="r-radius"></output><input type="range" id="r-radius" min="0" max="100" step="1"></div>
+        <div class="range" data-only="stack"><label for="r-cut1">上层卡片下沿</label><output id="o-cut1" for="r-cut1"></output><input type="range" id="r-cut1" min="35" max="65" step="0.5"></div>
+        <div class="range" data-only="stack"><label for="r-cut2">中层卡片下沿</label><output id="o-cut2" for="r-cut2"></output><input type="range" id="r-cut2" min="45" max="92" step="0.5"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-card">
+    <div class="sheet-head"><h3 id="sheetTitle">长按图片保存</h3><button type="button" class="ghost" id="sheetClose">关闭</button></div>
+    <p id="sheetText">手机上长按图片存到相册，电脑上右键选“图片另存为”。</p>
+    <img id="sheetImg" alt="生成的壁纸">
+    <div class="sheet-actions" id="sheetActions" hidden><a class="ghost" id="sheetDl" href="#" download>下载 PNG 文件</a></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const KEY = 'dieka-wallpaper-v1';
+const IN_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
+
+const DEVICES = [
+  {id:'plus',  label:'iPhone 6.7″ · 1290×2796', w:1290, h:2796},
+  {id:'pm',    label:'iPhone 6.9″ · 1320×2868', w:1320, h:2868},
+  {id:'pro',   label:'iPhone 6.3″ · 1206×2622', w:1206, h:2622},
+  {id:'std',   label:'iPhone 6.1″ · 1179×2556', w:1179, h:2556},
+  {id:'and',   label:'安卓 FHD+ · 1080×2400',   w:1080, h:2400},
+  {id:'and2k', label:'安卓 QHD+ · 1440×3200',   w:1440, h:3200},
+  {id:'custom',label:'自定义尺寸…',             w:0,    h:0}
+];
+
+const PRESETS = [
+  {id:'sky',   name:'晴空蓝', layout:'stack',  c1:'#2b5a8a', c2:'#e6dfcf', c3:'#1c2733', bg:'#344a5c', ink:'#1a2029', texture:45, shadow:60, radius:50, cut1:52,   cut2:75.5, font:'sans'},
+  {id:'mist',  name:'雾蓝',   layout:'stack',  c1:'#7394a7', c2:'#8fb2ab', c3:'#5c596e', bg:'#344a5c', ink:'#162024', texture:75, shadow:70, radius:50, cut1:52,   cut2:75.5, font:'sans'},
+  {id:'olive', name:'橄榄',   layout:'stack',  c1:'#6c7752', c2:'#c79352', c3:'#3a3a3c', bg:'#344a5c', ink:'#1c1811', texture:65, shadow:70, radius:50, cut1:52,   cut2:75.5, font:'sans'},
+  {id:'brave', name:'勇气',   layout:'stack',  c1:'#07345c', c2:'#e0c79f', c3:'#85130f', bg:'#344a5c', ink:'#17130f', texture:6,  shadow:55, radius:66, cut1:54.5, cut2:75.7, font:'sans'},
+  {id:'sunny', name:'晴日',   layout:'frame3', bg:'#344a5c', c1:'#b8c7ba', c2:'#4a6377', c3:'#f1dcb4', ink:'#f4e2bc', texture:12, shadow:35, radius:50, font:'script'},
+  {id:'dusk',  name:'暮色',   layout:'frame2', bg:'#344a5c', c1:'#bac5bd', c2:'#7a909f', c3:'#9dabb4', ink:'#f4e2bc', texture:12, shadow:35, radius:50, font:'script'}
+];
+const PRESET_KEYS = ['layout','c1','c2','c3','bg','ink','texture','shadow','radius','cut1','cut2'];
+
+/* ---------- fonts ---------- */
+const FB = {
+  sans:  '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif',
+  serif: '"Songti SC","STSong","SimSun","Noto Serif SC",serif',
+  hand:  '"Kaiti SC","STKaiti","KaiTi",cursive',
+  mono:  '"PingFang SC","Microsoft YaHei",monospace'
+};
+const FONT_GROUPS = [
+  {name:'英文 · 无衬线', fonts:[
+    {id:'sans',       fam:'Archivo',            label:'Archivo 黑体',   wt:800, wb:500, fb:'sans',  upper:true},
+    {id:'montserrat', fam:'Montserrat',         label:'Montserrat 几何', wt:800, wb:500, fb:'sans',  upper:true, scale:.95},
+    {id:'oswald',     fam:'Oswald',             label:'Oswald 窄体',    wt:600, wb:500, fb:'sans',  upper:true},
+    {id:'bebas',      fam:'Bebas Neue',         label:'Bebas 海报',     wt:400, wb:400, fb:'sans',  upper:true, scale:1.15},
+    {id:'fredoka',    fam:'Fredoka',            label:'Fredoka 圆体',   wt:600, wb:500, fb:'sans',  upper:true}
+  ]},
+  {name:'英文 · 衬线', fonts:[
+    {id:'dmserif',    fam:'DM Serif Display',   label:'DM Serif',       wt:400, wb:400, fb:'serif', upper:true, scale:1.05},
+    {id:'playfair',   fam:'Playfair Display',   label:'Playfair 杂志',  wt:800, wb:500, fb:'serif', upper:true},
+    {id:'cormorant',  fam:'Cormorant Garamond', label:'Cormorant 古典', wt:700, wb:600, fb:'serif', upper:true, scale:1.12}
+  ]},
+  {name:'手写 · 花体', fonts:[
+    {id:'hand',       fam:'Gochi Hand',         label:'Gochi 手写',     wt:400, wb:400, fb:'hand', scale:1.12, lh:1.35},
+    {id:'caveat',     fam:'Caveat',             label:'Caveat 笔记',    wt:700, wb:500, fb:'hand', scale:1.3,  lh:1.3},
+    {id:'script',     fam:'Satisfy',            label:'Satisfy 花体',   wt:400, wb:400, fb:'hand', scale:1.2,  lh:1.45},
+    {id:'dancing',    fam:'Dancing Script',     label:'Dancing 连笔',   wt:700, wb:500, fb:'hand', scale:1.2,  lh:1.4},
+    {id:'pacifico',   fam:'Pacifico',           label:'Pacifico 圆润',  wt:400, wb:400, fb:'hand', lh:1.6}
+  ]},
+  {name:'等宽', fonts:[
+    {id:'mono',       fam:'IBM Plex Mono',      label:'Plex Mono',      wt:600, wb:500, fb:'mono', upper:true, scale:.92},
+    {id:'spacemono',  fam:'Space Mono',         label:'Space Mono',     wt:700, wb:400, fb:'mono', upper:true, scale:.92}
+  ]},
+  {name:'中文', fonts:[
+    {id:'notosans',   fam:'Noto Sans SC',          label:'思源黑体',   wt:900, wb:500, fb:'sans',  upper:true, lh:1.45},
+    {id:'notoserif',  fam:'Noto Serif SC',         label:'思源宋体',   wt:900, wb:500, fb:'serif', upper:true, lh:1.45},
+    {id:'xiaowei',    fam:'ZCOOL XiaoWei',         label:'站酷小薇',   wt:400, wb:400, fb:'serif', lh:1.45},
+    {id:'huangyou',   fam:'ZCOOL QingKe HuangYou', label:'庆科黄油体', wt:400, wb:400, fb:'sans',  lh:1.45},
+    {id:'kuaile',     fam:'ZCOOL KuaiLe',          label:'站酷快乐体', wt:400, wb:400, fb:'sans',  lh:1.45},
+    {id:'mashan',     fam:'Ma Shan Zheng',         label:'马善政毛笔', wt:400, wb:400, fb:'hand',  scale:1.1,  lh:1.45},
+    {id:'longcang',   fam:'Long Cang',             label:'龙藏手写',   wt:400, wb:400, fb:'hand',  scale:1.15, lh:1.45},
+    {id:'zhimang',    fam:'Zhi Mang Xing',         label:'志莽行书',   wt:400, wb:400, fb:'hand',  scale:1.15, lh:1.45}
+  ]}
+];
+/* Fonts served by Chinese font hosts; each lists sources in the order they are tried. */
+const ZS = 'https://fontsapi.zeoseven.com/', NPMM = 'https://registry.npmmirror.com/', JSD = 'https://cdn.jsdelivr.net/npm/';
+const EXTRA_GROUP = {name:'中文 · 国内字体站', extra:true, fonts:[
+  {id:'wenkai',     fam:'LXGW WenKai',                         label:'霞鹜文楷',   wt:400, wb:400, fb:'hand',  lh:1.45,
+    srcs:[NPMM + 'lxgw-wenkai-webfont/1.7.0/files/lxgwwenkai-regular.css', JSD + 'lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css', ZS + '292/main/result.css']},
+  {id:'smiley',     fam:'Smiley Sans Oblique',                 label:'得意黑',     wt:400, wb:400, fb:'sans',  lh:1.4, upper:true,
+    srcs:[NPMM + '@chinese-fonts/dyh/3.0.0/files/dist/SmileySans-Oblique/result.css', JSD + '@chinese-fonts/dyh@3.0.0/dist/SmileySans-Oblique/result.css', ZS + '92/main/result.css']},
+  {id:'jiangcheng', fam:'JiangChengYuanTi',                    label:'江城圆体',   wt:400, wb:400, fb:'sans',  lh:1.45, upper:true, srcs:[ZS + '59/main/result.css']},
+  {id:'maoken',     fam:'MaoKenTangYuan (beta)',               label:'猫啃网糖圆', wt:400, wb:400, fb:'sans',  lh:1.45, upper:true, srcs:[ZS + '383/main/result.css']},
+  {id:'yfhct',      fam:'YFHCT',                               label:'云峰寒蝉体', wt:400, wb:400, fb:'hand',  lh:1.45, srcs:[ZS + '444/main/result.css']},
+  {id:'zhuque',     fam:'Zhuque Fangsong (technical preview)', label:'朱雀仿宋',   wt:400, wb:400, fb:'serif', lh:1.45, upper:true, srcs:[ZS + '7/main/result.css']},
+  {id:'kinghwa',    fam:'KingHwaOldSong',                      label:'京华老宋体', wt:400, wb:400, fb:'serif', lh:1.45, upper:true, srcs:[ZS + '309/main/result.css']}
+]};
+if (!IN_CLAUDE) FONT_GROUPS.push(EXTRA_GROUP);
+const FONTS = {};
+FONT_GROUPS.concat(IN_CLAUDE ? [EXTRA_GROUP] : []).forEach(g => g.fonts.forEach(f => { FONTS[f.id] = f; }));
+
+/* Google Fonts is tried directly first, then through mirrors reachable from mainland China. */
+const GF_Q = 'family=Archivo:wght@400;500;600;800&family=Bebas+Neue&family=Caveat:wght@500;700&family=Cormorant+Garamond:wght@600;700&family=DM+Serif+Display&family=Dancing+Script:wght@500;700&family=Fredoka:wght@500;600&family=Gochi+Hand&family=IBM+Plex+Mono:wght@400;500;600&family=Long+Cang&family=Ma+Shan+Zheng&family=Montserrat:wght@500;800&family=Noto+Sans+SC:wght@500;900&family=Noto+Serif+SC:wght@500;900&family=Oswald:wght@500;600&family=Pacifico&family=Playfair+Display:wght@500;800&family=Satisfy&family=Space+Mono:wght@400;700&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=ZCOOL+XiaoWei&family=Zhi+Mang+Xing&display=swap';
+const GF_SRCS = [
+  {name:'Google Fonts',          url:'https://fonts.googleapis.com/css2?' + GF_Q},
+  {name:'Google Fonts 中国节点', url:'https://fonts.googleapis.cn/css2?' + GF_Q},
+  {name:'loli.net 镜像',         url:'https://fonts.loli.net/css2?' + GF_Q}
+];
+const wait = ms => new Promise(r => setTimeout(r, ms));
+function addCss(url){ const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = url; document.head.append(l); return l; }
+function cssLoaded(link,ms){
+  return new Promise(res => {
+    const t = setTimeout(() => res(false), ms);
+    link.addEventListener('load', () => { clearTimeout(t); res(true); }, {once:true});
+    link.addEventListener('error', () => { clearTimeout(t); res(false); }, {once:true});
+  });
+}
+function faceWorks(font,text,ms){
+  if (!document.fonts || !document.fonts.load) return Promise.resolve(true);
+  return Promise.race([
+    document.fonts.load(font, text).then(list => list.length > 0 && list.every(f => f.status === 'loaded'), () => false),
+    wait(ms).then(() => false)
+  ]);
+}
+async function trySources(urls,probeFont,probeText){
+  for (const url of urls){
+    const link = addCss(url);
+    if (await cssLoaded(link, 4500) && await faceWorks(probeFont, probeText, 6000)) return url;
+    link.remove();
+  }
+  return null;
+}
+let gState = 'loading', gName = '';
+function fontsChanged(){ tried.clear(); schedule(); thumbsSoon(); }
+function updateFontNote(){
+  const parts = [];
+  if (gState === 'loading') parts.push('正在加载字体…');
+  else if (gState === 'failed') parts.push('Google 字体和它的镜像都没连上，这部分暂时用系统字体显示。');
+  else parts.push('英文和思源等字体来自 ' + gName + '。');
+  if (IN_CLAUDE) parts.push('GitHub 独立版里另有霞鹜文楷、得意黑等 7 款来自国内字体站的中文字体。');
+  else {
+    const failed = EXTRA_GROUP.fonts.filter(f => f.state === 'failed').length;
+    if (failed) parts.push(`国内字体站有 ${failed} 款没加载成功，已先隐藏。`);
+  }
+  $('fontNote').textContent = parts.join(' ');
+}
+function markExtra(f){
+  const b = document.querySelector(`.fchip[data-id="${f.id}"]`);
+  if (b){ b.dataset.state = f.state; b.hidden = f.state === 'failed'; }
+  const head = $('fg-extra');
+  if (head) head.hidden = EXTRA_GROUP.fonts.every(x => x.state === 'failed');
+}
+function loadFonts(){
+  updateFontNote();
+  trySources(GF_SRCS.map(s => s.url), '800 20px "Archivo"', 'Aa').then(url => {
+    const s = GF_SRCS.find(x => x.url === url);
+    gState = s ? 'ok' : 'failed'; gName = s ? s.name : '';
+    fontsChanged(); updateFontNote();
+  });
+  if (IN_CLAUDE) return;
+  for (const f of EXTRA_GROUP.fonts){
+    trySources(f.srcs, `400 24px "${f.fam}"`, '永').then(url => {
+      f.state = url ? 'ready' : 'failed';
+      markExtra(f); fontsChanged(); updateFontNote();
+    });
+  }
+}
+const fontOf = id => FONTS[id] || FONTS.sans;
+const famCss = f => `"${f.fam}",${FB[f.fb]}`;
+function fontCss(id,role,px){ const f = fontOf(id); return `${role === 'title' ? f.wt : f.wb} ${px*(f.scale || 1)}px ${famCss(f)}`; }
+const tried = new Set();
+function useFont(ctx,font,text){
+  ctx.font = font;
+  if (!text || !document.fonts || !document.fonts.load) return;
+  let ok = true;
+  try { ok = document.fonts.check(font, text); } catch (e) {}
+  if (ok) return;
+  const key = font + '|' + text;
+  if (tried.has(key)) return;
+  tried.add(key);
+  document.fonts.load(font, text).then(() => { schedule(); thumbsSoon(); }, () => {});
+}
+
+const COLOR_ORDER = {stack:['c1','c2','c3','ink'], frame3:['bg','c1','c2','c3','ink'], frame2:['bg','c1','c2','c3','ink']};
+const COLOR_LABELS = {
+  stack:  {c1:'上层卡片', c2:'中层卡片', c3:'底色', ink:'文字'},
+  frame3: {bg:'底色', c1:'上格', c2:'中间条', c3:'下格', ink:'文字'},
+  frame2: {bg:'底色', c1:'上格 · 顶部', c2:'上格 · 底部', c3:'下格', ink:'文字'}
+};
+const RANGES = ['size','qsize','texture','shadow','radius','cut1','cut2','rlen','rthick'];
+const PCT_RANGES = ['size','qsize','cut1','cut2','rlen'];
+
+const DEFAULT = Object.assign({}, PRESETS[0], {
+  preset:'sky', title:'Do your best', subtitle:'Day One', icon:'sun',
+  quote:"What's gone is done.\nLive today and do your best.",
+  sfont:'sans', qfont:'sans', qsize:100, rule:'solid', rlen:21.5, rthick:4,
+  upper:true, size:100, device:'plus', cw:1290, ch:2796, clock:true
+});
+delete DEFAULT.id; delete DEFAULT.name;
+
+let st = Object.assign({}, DEFAULT);
+try {
+  const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+  if (saved && typeof saved === 'object') Object.assign(st, saved);
+} catch (e) {}
+if (!COLOR_ORDER[st.layout]) st.layout = 'stack';
+if (!DEVICES.some(d => d.id === st.device)) st.device = 'plus';
+['font','sfont','qfont'].forEach(k => { if (!FONTS[st[k]]) st[k] = 'sans'; });
+let ftarget = 'font';
+
+/* ---------- colour helpers ---------- */
+function hexToRgb(h){ h = String(h).replace('#',''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16) || 0; return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function rgbToHex(r,g,b){ return '#' + [r,g,b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2,'0')).join(''); }
+function mix(a,b,t){ const A = hexToRgb(a), B = hexToRgb(b); return rgbToHex(A[0]+(B[0]-A[0])*t, A[1]+(B[1]-A[1])*t, A[2]+(B[2]-A[2])*t); }
+function rgba(hex,a){ const [r,g,b] = hexToRgb(hex); return `rgba(${r},${g},${b},${a})`; }
+function lum(hex){ const c = hexToRgb(hex).map(v => { v /= 255; return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); }); return .2126*c[0] + .7152*c[1] + .0722*c[2]; }
+function hsl(h,s,l){ s /= 100; l /= 100; const a = s*Math.min(l,1-l); const f = n => { const k = (n + h/30) % 12; return l - a*Math.max(-1, Math.min(k-3, 9-k, 1)); }; return rgbToHex(255*f(0), 255*f(8), 255*f(4)); }
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+
+/* ---------- paper texture (seeded, cached per size) ---------- */
+function rng(seed){ let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const texCache = new Map();
+function getTexture(W,H){
+  const key = W + 'x' + H;
+  if (texCache.has(key)) return texCache.get(key);
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'); const R = rng(20260929); const s = W/1000;
+
+  const mw = Math.max(8, Math.round(W/24)), mh = Math.max(16, Math.round(H/24));
+  const m = document.createElement('canvas'); m.width = mw; m.height = mh;
+  const mx = m.getContext('2d'); const md = mx.createImageData(mw, mh);
+  for (let i = 0; i < mw*mh; i++){ const v = R() < .5 ? 0 : 255; md.data[i*4] = md.data[i*4+1] = md.data[i*4+2] = v; md.data[i*4+3] = Math.floor(R()*70); }
+  mx.putImageData(md, 0, 0);
+  x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  x.globalAlpha = .55; x.drawImage(m, 0, 0, W, H); x.globalAlpha = 1;
+
+  const g = document.createElement('canvas'); g.width = g.height = 256;
+  const gx = g.getContext('2d'); const gd = gx.createImageData(256, 256);
+  for (let i = 0; i < 65536; i++){ const v = R() < .5 ? 0 : 255; gd.data[i*4] = gd.data[i*4+1] = gd.data[i*4+2] = v; gd.data[i*4+3] = Math.floor(R()*36); }
+  gx.putImageData(gd, 0, 0);
+  x.fillStyle = x.createPattern(g, 'repeat'); x.fillRect(0, 0, W, H);
+
+  const n = Math.round(W*H/700);
+  const paths = [new Path2D(), new Path2D(), new Path2D(), new Path2D()];
+  for (let i = 0; i < n; i++){
+    const px = R()*W, py = R()*H, a = R()*Math.PI*2, L = (3 + R()*11)*s, bend = (R() - .5)*L*.8;
+    const ex = px + Math.cos(a)*L, ey = py + Math.sin(a)*L;
+    const cx = (px+ex)/2 - Math.sin(a)*bend, cy = (py+ey)/2 + Math.cos(a)*bend;
+    const p = paths[Math.floor(R()*4)]; p.moveTo(px, py); p.quadraticCurveTo(cx, cy, ex, ey);
+  }
+  x.lineCap = 'round'; x.lineWidth = Math.max(.6, .85*s);
+  x.strokeStyle = 'rgba(255,255,255,.11)'; x.stroke(paths[0]);
+  x.strokeStyle = 'rgba(255,255,255,.06)'; x.stroke(paths[1]);
+  x.strokeStyle = 'rgba(0,0,0,.07)';       x.stroke(paths[2]);
+  x.strokeStyle = 'rgba(0,0,0,.04)';       x.stroke(paths[3]);
+
+  if (texCache.size >= 4) texCache.delete(texCache.keys().next().value);
+  texCache.set(key, c);
+  return c;
+}
+function texture(ctx,W,H,a){ if (a <= 0) return; ctx.save(); ctx.globalAlpha = Math.min(1, a*1.1); ctx.drawImage(getTexture(W,H), 0, 0); ctx.restore(); }
+function lighting(ctx,W,H,k){
+  if (k <= 0) return;
+  const g = ctx.createRadialGradient(W*.2, H*.08, 0, W*.2, H*.08, Math.hypot(W,H)*.95);
+  g.addColorStop(0, `rgba(255,255,255,${.10*k})`); g.addColorStop(.45, 'rgba(255,255,255,0)'); g.addColorStop(1, `rgba(0,0,0,${.28*k})`);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+
+/* ---------- shapes ---------- */
+function rr(ctx,x,y,w,h,r){ r = Math.max(0, Math.min(r, w/2, h/2)); ctx.beginPath(); ctx.moveTo(x+r, y); ctx.arcTo(x+w, y, x+w, y+h, r); ctx.arcTo(x+w, y+h, x, y+h, r); ctx.arcTo(x, y+h, x, y, r); ctx.arcTo(x, y, x+w, y, r); ctx.closePath(); }
+function rb(ctx,x,y,w,h,r){ r = Math.max(0, Math.min(r, w/2, h)); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x+w, y); ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w, y+h, x+w-r, y+h, r); ctx.lineTo(x+r, y+h); ctx.arcTo(x, y+h, x, y+h-r, r); ctx.closePath(); }
+
+/* ---------- text helpers ---------- */
+function titleText(S){ const t = (S.title || '').trim(); return (S.upper && fontOf(S.font).upper) ? t.toUpperCase() : t; }
+function wrapLines(ctx,text,maxW){
+  const out = [];
+  for (const para of String(text).split('\n')){
+    if (ctx.measureText(para).width <= maxW){ out.push(para); continue; }
+    const toks = para.match(/[⺀-鿿豈-﫿＀-￯]|[^\s⺀-鿿豈-﫿＀-￯]+|\s+/g) || [];
+    let line = '';
+    for (const t of toks){
+      const test = line + t;
+      if (ctx.measureText(test).width > maxW && line.trim()){ out.push(line.trimEnd()); line = t.trimStart(); }
+      else line = test;
+    }
+    if (line.trim()) out.push(line.trimEnd());
+  }
+  return out;
+}
+function drawRule(ctx,x,y,len,th,style,color){
+  if (style === 'none' || len <= 0) return;
+  ctx.save(); ctx.fillStyle = color; ctx.strokeStyle = color;
+  if (style === 'double'){
+    ctx.fillRect(x, y - th*.3, len, Math.max(1, th*.6));
+    ctx.fillRect(x, y + th*.9, len, Math.max(1, th*.6));
+  } else if (style === 'dashed' || style === 'dotted'){
+    ctx.lineWidth = th; ctx.beginPath();
+    if (style === 'dotted'){ ctx.lineCap = 'round'; ctx.setLineDash([.01, th*2.6]); ctx.moveTo(x + th/2, y + th/2); }
+    else { ctx.lineCap = 'butt'; ctx.setLineDash([th*4, th*2.5]); ctx.moveTo(x, y + th/2); }
+    ctx.lineTo(x + len, y + th/2); ctx.stroke();
+  } else {
+    ctx.fillRect(x, y, len, th);
+  }
+  ctx.restore();
+}
+
+function drawIcon(ctx,kind,cx,cy,sz,color){
+  if (kind === 'none') return;
+  ctx.save(); ctx.translate(cx, cy);
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const u = sz/2;
+  if (kind === 'sun'){
+    ctx.lineWidth = Math.max(1, sz*.06);
+    ctx.beginPath(); ctx.arc(0, 0, u*.5, 0, Math.PI*2); ctx.stroke();
+    for (let i = 0; i < 8; i++){ const a = i*Math.PI/4 - Math.PI/2; ctx.beginPath(); ctx.moveTo(Math.cos(a)*u*.68, Math.sin(a)*u*.68); ctx.lineTo(Math.cos(a)*u*.96, Math.sin(a)*u*.96); ctx.stroke(); }
+    const er = Math.max(.6, u*.058);
+    ctx.beginPath(); ctx.arc(-u*.17, -u*.1, er, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(u*.17, -u*.1, er, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(0, u*.02, u*.24, Math.PI*.2, Math.PI*.8); ctx.stroke();
+  } else if (kind === 'spark'){
+    const a = u*.95, b = u*.16;
+    ctx.beginPath(); ctx.moveTo(0, -a);
+    ctx.quadraticCurveTo(b, -b, a, 0); ctx.quadraticCurveTo(b, b, 0, a);
+    ctx.quadraticCurveTo(-b, b, -a, 0); ctx.quadraticCurveTo(-b, -b, 0, -a);
+    ctx.fill();
+  } else if (kind === 'heart'){
+    ctx.lineWidth = Math.max(1, sz*.075);
+    const h = u*.85;
+    ctx.beginPath(); ctx.moveTo(0, h*.75);
+    ctx.bezierCurveTo(-h*1.25, -h*.05, -h*.6, -h*1.05, 0, -h*.35);
+    ctx.bezierCurveTo(h*.6, -h*1.05, h*1.25, -h*.05, 0, h*.75);
+    ctx.closePath(); ctx.stroke();
+  } else if (kind === 'ring'){
+    ctx.lineWidth = Math.max(1, sz*.07);
+    ctx.beginPath(); ctx.arc(0, 0, u*.88, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, u*.46, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, u*.15, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+/* ---------- layout: stacked paper ---------- */
+function stackCard(ctx,W,top,bottom,r,color,k,thick,s){
+  const path = () => rb(ctx, 0, top, W, bottom - top, r);
+  if (k > 0){
+    ctx.save(); ctx.fillStyle = color;
+    ctx.shadowColor = `rgba(0,0,0,${Math.min(.8, .42*k)})`; ctx.shadowBlur = 46*s*(.6 + .4*k); ctx.shadowOffsetY = 20*s*k;
+    path(); ctx.fill();
+    ctx.shadowColor = `rgba(0,0,0,${Math.min(.8, .45*k)})`; ctx.shadowBlur = 9*s; ctx.shadowOffsetY = 5*s*k;
+    path(); ctx.fill();
+    ctx.restore();
+  }
+  if (thick > .2){ ctx.fillStyle = mix(color, '#000000', .38); rb(ctx, 0, top + thick, W, bottom - top, r); ctx.fill(); }
+  ctx.fillStyle = color; path(); ctx.fill();
+  ctx.save(); path(); ctx.clip();
+  const vt = Math.max(0, top);
+  const g = ctx.createLinearGradient(0, vt, 0, bottom);
+  g.addColorStop(0, 'rgba(255,255,255,.07)'); g.addColorStop(.55, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,.08)');
+  ctx.fillStyle = g; ctx.fillRect(0, vt, W, bottom - vt);
+  ctx.restore();
+}
+function drawStackText(ctx,W,H,y1,S){
+  const x = W*.097, maxW = W - 2*x, T = W*.056*S.size/100;
+  ctx.fillStyle = S.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  const title = titleText(S);
+  const yt = y1 + W*.103 + T*.74;
+  if (title){
+    useFont(ctx, fontCss(S.font, 'title', T), title);
+    const tw = ctx.measureText(title).width;
+    if (tw > maxW) useFont(ctx, fontCss(S.font, 'title', T*maxW/tw), title);
+    ctx.fillText(title, x, yt);
+  }
+  const sub = (S.subtitle || '').trim();
+  const hasIcon = S.icon !== 'none';
+  let yr;
+  if (sub || hasIcon){
+    const ys = yt + T*.95;
+    let ex = x;
+    if (sub){
+      useFont(ctx, fontCss(S.sfont, 'body', T*.55), sub);
+      const sw = ctx.measureText(sub).width, room = maxW - (hasIcon ? T*1 : 0);
+      if (sw > room) useFont(ctx, fontCss(S.sfont, 'body', T*.55*room/sw), sub);
+      ctx.fillText(sub, x, ys); ex = x + ctx.measureText(sub).width + T*.32;
+    }
+    if (hasIcon){ const isz = T*.62; drawIcon(ctx, S.icon, ex + isz/2, ys - T*.19, isz, S.ink); }
+    yr = ys + T*1.5;
+  } else {
+    yr = yt + T*.95;
+  }
+  const th = Math.max(1, W*.00105*S.rthick);
+  drawRule(ctx, x, yr, Math.min(maxW, W*S.rlen/100), th, S.rule, S.ink);
+  const q = S.quote || '';
+  if (q.trim()){
+    const fs = T*.37*S.qsize/100;
+    ctx.fillStyle = S.ink;
+    useFont(ctx, fontCss(S.qfont, 'body', fs), q.replace(/\s+/g, ' '));
+    const lines = wrapLines(ctx, q, maxW);
+    const lh = fs*(fontOf(S.qfont).lh || 1.25);
+    let y = S.rule === 'none' ? yr + fs*.9 : yr + Math.max(T*1.08, th*1.6 + fs*1.15);
+    for (const ln of lines){ ctx.fillText(ln, x, y); y += lh; }
+  }
+}
+function renderStack(ctx,W,H,S){
+  const s = W/1000, k = S.shadow/60, r = W*.14*S.radius/100;
+  const y1 = H*S.cut1/100, y2 = H*Math.max(S.cut2, S.cut1 + 6)/100;
+  const thick = 3.2*s*Math.min(1, S.texture/40);
+  ctx.fillStyle = S.c3; ctx.fillRect(0, 0, W, H);
+  stackCard(ctx, W, -r*2, y2, r, S.c2, k, thick, s);
+  stackCard(ctx, W, -r*2, y1, r, S.c1, k, thick, s);
+  lighting(ctx, W, H, S.shadow/100);
+  texture(ctx, W, H, S.texture/100);
+  drawStackText(ctx, W, H, y1, S);
+}
+
+/* ---------- layout: framed panels ---------- */
+function drawCenterTitle(ctx,cx,cy,size,maxW,S){
+  const t = titleText(S), hasIcon = S.icon !== 'none';
+  const measure = z => {
+    useFont(ctx, fontCss(S.font, 'title', z), t);
+    const tw = t ? ctx.measureText(t).width : 0, isz = z*.62, gap = (t && hasIcon) ? z*.14 : 0;
+    return {tw, isz, gap, total: tw + (hasIcon ? gap + isz : 0)};
+  };
+  let sz = size, m = measure(sz);
+  if (m.total > maxW){ sz = sz*maxW/m.total; m = measure(sz); }
+  const x0 = cx - m.total/2, base = cy + sz*.32;
+  ctx.fillStyle = S.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  if (t) ctx.fillText(t, x0, base);
+  if (hasIcon) drawIcon(ctx, S.icon, x0 + m.tw + m.gap + m.isz/2, base - sz*.62, m.isz, S.ink);
+}
+function renderFrame(ctx,W,H,S,three){
+  const k = S.shadow/60, m = W*.047, w = W - 2*m, R = W*.18*S.radius/100, o = W*.011;
+  ctx.fillStyle = S.bg; ctx.fillRect(0, 0, W, H);
+  const line = rgba(mix(S.bg, '#ffffff', .72), .6);
+  const panels = three
+    ? [[.045, .482, S.c1], [.52, .652, S.c2], [.684, .952, S.c3]]
+    : [[.058, .69, null], [.752, .955, S.c3]];
+  for (const [a, b, c] of panels){
+    const y = H*a, h = H*(b - a), r = Math.min(R, h/2, w/2);
+    let fill = c;
+    if (!fill){ fill = ctx.createLinearGradient(0, y, 0, y + h); fill.addColorStop(0, S.c1); fill.addColorStop(.3, S.c1); fill.addColorStop(1, S.c2); }
+    ctx.save(); ctx.lineWidth = Math.max(1, W*.0026); ctx.strokeStyle = line; rr(ctx, m - o, y - o, w + 2*o, h + 2*o, r + o); ctx.stroke(); ctx.restore();
+    ctx.save();
+    if (k > 0){ ctx.shadowColor = `rgba(0,0,0,${Math.min(.7, .35*k)})`; ctx.shadowBlur = W*.03; ctx.shadowOffsetY = W*.008*k; }
+    ctx.fillStyle = fill; rr(ctx, m, y, w, h, r); ctx.fill(); ctx.restore();
+    ctx.save(); rr(ctx, m, y, w, h, r); ctx.clip();
+    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, 'rgba(255,255,255,.06)'); g.addColorStop(1, 'rgba(0,0,0,.06)');
+    ctx.fillStyle = g; ctx.fillRect(m, y, w, h);
+    ctx.lineWidth = Math.max(1, W*.002); ctx.strokeStyle = 'rgba(0,0,0,.12)'; rr(ctx, m + .5, y + .5, w - 1, h - 1, r); ctx.stroke();
+    ctx.restore();
+  }
+  lighting(ctx, W, H, S.shadow/100*.8);
+  texture(ctx, W, H, S.texture/100);
+  if (three) drawCenterTitle(ctx, W/2, H*.586, W*.13*S.size/100, w*.84, S);
+  else drawCenterTitle(ctx, W/2, H*.605, W*.14*S.size/100, w*.84, S);
+}
+
+function render(ctx,W,H,S){
+  ctx.save(); ctx.clearRect(0, 0, W, H);
+  if (S.layout === 'stack') renderStack(ctx, W, H, S);
+  else renderFrame(ctx, W, H, S, S.layout === 'frame3');
+  ctx.restore();
+}
+
+/* ---------- main canvas ---------- */
+const cv = $('cv'), cx = cv.getContext('2d');
+function getSize(){
+  if (st.device === 'custom') return [clamp(Math.round(+st.cw) || 1080, 360, 4096), clamp(Math.round(+st.ch) || 2400, 360, 4096)];
+  const d = DEVICES.find(d => d.id === st.device) || DEVICES[0];
+  return [d.w, d.h];
+}
+function draw(){
+  const [W, H] = getSize();
+  if (cv.width !== W || cv.height !== H){ cv.width = W; cv.height = H; }
+  render(cx, W, H, st);
+}
+let raf = 0;
+function schedule(){ if (raf) return; raf = requestAnimationFrame(() => { raf = 0; draw(); }); }
+
+/* ---------- presets ---------- */
+const fam = l => l === 'stack' ? 's' : 'f';
+const thumbs = {};
+function buildPresets(){
+  const box = $('presets');
+  for (const p of PRESETS){
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'preset'; b.dataset.id = p.id;
+    const c = document.createElement('canvas'); c.width = 132; c.height = 286;
+    const sp = document.createElement('span'); sp.textContent = p.name;
+    b.append(c, sp); b.addEventListener('click', () => applyPreset(p));
+    box.append(b); thumbs[p.id] = c;
+  }
+}
+function presetState(p){
+  const S = Object.assign({}, st);
+  for (const k of PRESET_KEYS) if (k in p) S[k] = p[k];
+  S.font = fam(p.layout) === fam(st.layout) ? st.font : p.font;
+  return S;
+}
+function renderThumbs(){ for (const p of PRESETS){ const c = thumbs[p.id]; render(c.getContext('2d'), c.width, c.height, presetState(p)); } }
+let thumbT = 0;
+function thumbsSoon(){ clearTimeout(thumbT); thumbT = setTimeout(renderThumbs, 180); }
+function markPresets(){ document.querySelectorAll('.preset').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === st.preset))); }
+function applyPreset(p){
+  const sameFam = fam(p.layout) === fam(st.layout);
+  for (const k of PRESET_KEYS) if (k in p) st[k] = p[k];
+  if (!sameFam) st.font = p.font;
+  st.preset = p.id;
+  syncUI(); changed(true);
+}
+function shuffle(){
+  const R = Math.random, h = Math.floor(R()*360);
+  if (st.layout === 'stack'){
+    st.c1 = hsl(h, 20 + R()*30, 28 + R()*24);
+    const h2 = (h + (R() < .55 ? 25 + R()*45 : 150 + R()*60)) % 360;
+    st.c2 = hsl(h2, 22 + R()*32, 56 + R()*22);
+    st.c3 = hsl((h + 340) % 360, 6 + R()*16, 15 + R()*12);
+    st.ink = lum(st.c2) > .2 ? mix(st.c3, '#000000', .6) : '#f3ecdc';
+  } else if (st.layout === 'frame3'){
+    st.bg = hsl(h, 18 + R()*14, 20 + R()*8);
+    st.c1 = hsl((h + 20) % 360, 12 + R()*16, 70 + R()*10);
+    st.c2 = hsl(h, 16 + R()*12, 32 + R()*8);
+    st.c3 = hsl(30 + R()*20, 45 + R()*25, 80 + R()*8);
+    st.ink = hsl(40, 60, 87);
+  } else {
+    st.bg = hsl(h, 18 + R()*14, 20 + R()*8);
+    st.c1 = hsl((h + 20) % 360, 10 + R()*14, 72 + R()*10);
+    st.c2 = hsl(h, 14 + R()*14, 46 + R()*10);
+    st.c3 = hsl(h, 10 + R()*12, 62 + R()*10);
+    st.ink = hsl(40, 60, 87);
+  }
+  st.preset = null; buildColors(); markPresets(); changed();
+}
+
+/* ---------- font picker ---------- */
+function buildFontGrid(){
+  const box = $('fontgrid');
+  for (const g of FONT_GROUPS){
+    const h = document.createElement('div'); h.className = 'fg-head'; h.textContent = g.name; box.append(h);
+    if (g.extra) h.id = 'fg-extra';
+    for (const f of g.fonts){
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'fchip'; b.dataset.id = f.id;
+      if (g.extra){ f.state = 'loading'; b.dataset.state = 'loading'; }
+      const smp = document.createElement('span'); smp.className = 'fs'; smp.style.fontFamily = famCss(f);
+      const nm = document.createElement('span'); nm.className = 'fn'; nm.textContent = f.label;
+      b.append(smp, nm);
+      b.addEventListener('click', () => { st[ftarget] = f.id; markFonts(); updateSamples(); changed(true); });
+      box.append(b);
+    }
+  }
+}
+function markFonts(){
+  const cur = st[ftarget];
+  document.querySelectorAll('.fchip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === cur)));
+  $('upper').disabled = !fontOf(st.font).upper;
+}
+function updateSamples(){
+  const src = ftarget === 'font' ? st.title : ftarget === 'sfont' ? st.subtitle : (st.quote || '').split('\n')[0];
+  const base = Array.from((src || '').trim()).slice(0, 14).join('') || 'Aa 字';
+  document.querySelectorAll('.fchip').forEach(b => {
+    const f = fontOf(b.dataset.id), smp = b.firstChild;
+    smp.textContent = (ftarget === 'font' && st.upper && f.upper) ? base.toUpperCase() : base;
+    smp.style.fontWeight = ftarget === 'font' ? f.wt : f.wb;
+  });
+}
+function setTarget(t){
+  ftarget = st.layout === 'stack' ? t : 'font';
+  document.querySelectorAll('input[name=ftarget]').forEach(r => r.checked = r.value === ftarget);
+  markFonts(); updateSamples();
+}
+
+/* ---------- controls ---------- */
+function buildColors(){
+  const box = $('colors'); box.textContent = '';
+  const labels = COLOR_LABELS[st.layout];
+  for (const k of COLOR_ORDER[st.layout]){
+    const row = document.createElement('div'); row.className = 'crow';
+    const ci = document.createElement('input'); ci.type = 'color'; ci.id = 'col-' + k; ci.value = st[k];
+    const lab = document.createElement('label'); lab.htmlFor = ci.id; lab.textContent = labels[k];
+    const hx = document.createElement('input'); hx.type = 'text'; hx.id = 'hex-' + k; hx.className = 'hex';
+    hx.value = st[k].toUpperCase(); hx.maxLength = 7; hx.spellcheck = false; hx.autocomplete = 'off';
+    hx.setAttribute('aria-label', labels[k] + '色值');
+    ci.addEventListener('input', () => { hx.value = ci.value.toUpperCase(); setColor(k, ci.value); });
+    hx.addEventListener('input', () => {
+      let v = hx.value.trim(); if (!v.startsWith('#')) v = '#' + v;
+      if (/^#[0-9a-f]{6}$/i.test(v)){ v = v.toLowerCase(); ci.value = v; setColor(k, v); }
+    });
+    row.append(ci, lab, hx); box.append(row);
+  }
+}
+function setColor(k,v){ st[k] = v; if (st.preset){ st.preset = null; markPresets(); } changed(); }
+function outRange(k){ $('o-' + k).textContent = PCT_RANGES.includes(k) ? st[k] + '%' : String(st[k]); }
+function sizeChanged(){
+  const [W, H] = getSize(); const ph = $('phone');
+  ph.style.setProperty('--ar', String(W/H)); ph.style.aspectRatio = W + ' / ' + H;
+  $('dimLabel').textContent = W + ' × ' + H + ' px';
+}
+function syncUI(){
+  document.querySelectorAll('input[name=layout]').forEach(r => r.checked = r.value === st.layout);
+  document.querySelectorAll('input[name=icon]').forEach(r => r.checked = r.value === st.icon);
+  document.querySelectorAll('input[name=rule]').forEach(r => r.checked = r.value === st.rule);
+  $('title').value = st.title; $('subtitle').value = st.subtitle; $('quote').value = st.quote;
+  $('upper').checked = !!st.upper;
+  RANGES.forEach(k => { $('r-' + k).value = st[k]; outRange(k); });
+  document.querySelectorAll('[data-only]').forEach(el => { el.hidden = st.layout !== el.dataset.only; });
+  buildColors();
+  $('device').value = st.device; $('customBox').hidden = st.device !== 'custom';
+  $('cw').value = st.cw; $('ch').value = st.ch;
+  $('clock').checked = !!st.clock; $('lock').hidden = !st.clock;
+  setTarget(ftarget);
+  sizeChanged(); markPresets();
+}
+let saveT = 0;
+function persist(){ clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }, 300); }
+function changed(withThumbs){ schedule(); persist(); if (withThumbs) thumbsSoon(); }
+
+function bind(){
+  const sel = $('device');
+  for (const d of DEVICES){ const o = document.createElement('option'); o.value = d.id; o.textContent = d.label; sel.append(o); }
+  document.querySelectorAll('input[name=layout]').forEach(r => r.addEventListener('change', () => {
+    if (!r.checked) return; st.layout = r.value; st.preset = null; syncUI(); changed(true);
+  }));
+  ['icon', 'rule'].forEach(name => document.querySelectorAll(`input[name=${name}]`).forEach(r => r.addEventListener('change', () => {
+    if (!r.checked) return; st[name] = r.value; changed(true);
+  })));
+  document.querySelectorAll('input[name=ftarget]').forEach(r => r.addEventListener('change', () => { if (r.checked) setTarget(r.value); }));
+  [['title', 'font'], ['subtitle', 'sfont'], ['quote', 'qfont']].forEach(([k, t]) => $(k).addEventListener('input', () => {
+    st[k] = $(k).value; changed(true); if (ftarget === t) updateSamples();
+  }));
+  $('upper').addEventListener('change', () => { st.upper = $('upper').checked; updateSamples(); changed(true); });
+  RANGES.forEach(k => $('r-' + k).addEventListener('input', () => { st[k] = +$('r-' + k).value; outRange(k); changed(k === 'size' || k === 'qsize'); }));
+  sel.addEventListener('change', () => { st.device = sel.value; $('customBox').hidden = st.device !== 'custom'; sizeChanged(); changed(); });
+  ['cw', 'ch'].forEach(k => $(k).addEventListener('change', () => {
+    const v = Math.round(+$(k).value); st[k] = clamp(isFinite(v) && v > 0 ? v : 1080, 360, 4096); $(k).value = st[k];
+    sizeChanged(); changed();
+  }));
+  $('clock').addEventListener('change', () => { st.clock = $('clock').checked; $('lock').hidden = !st.clock; persist(); });
+  $('shuffle').addEventListener('click', shuffle);
+  $('saveBtn').addEventListener('click', onSave);
+  $('sheetClose').addEventListener('click', closeSheet);
+  $('sheet').addEventListener('click', e => { if (e.target === $('sheet')) closeSheet(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('sheet').hidden) closeSheet(); });
+}
+
+/* ---------- lock-screen overlay ---------- */
+function tick(){
+  const d = new Date();
+  $('lkTime').textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  $('lkDate').textContent = `${d.getMonth() + 1}月${d.getDate()}日 星期${'日一二三四五六'[d.getDay()]}`;
+}
+
+/* ---------- save ---------- */
+let dlP = null;
+function getDownloads(){
+  if (!dlP){
+    try { dlP = IN_CLAUDE ? window.claude.use('downloads').catch(() => null) : Promise.resolve(null); }
+    catch (e) { dlP = Promise.resolve(null); }
+  }
+  return dlP;
+}
+let toastT = 0;
+function toast(msg){ const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
+let sheetUrl = '';
+function showSheet(blob,name){
+  if (sheetUrl) URL.revokeObjectURL(sheetUrl);
+  sheetUrl = URL.createObjectURL(blob);
+  $('sheetImg').src = sheetUrl;
+  $('sheetDl').href = sheetUrl; $('sheetDl').download = name;
+  $('sheetActions').hidden = IN_CLAUDE;
+  $('sheetText').textContent = IN_CLAUDE
+    ? '这里没法直接下载。手机上长按图片存到相册，电脑上右键选“图片另存为”。'
+    : '长按图片可以直接存到相册；也可以点下面的按钮下载文件。';
+  $('sheet').hidden = false; $('sheetClose').focus();
+}
+function closeSheet(){ $('sheet').hidden = true; }
+function fileDownload(blob,name){
+  const u = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = u; a.download = name; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 5000);
+}
+const isTouch = () => { try { return matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } };
+async function onSave(){
+  const btn = $('saveBtn'); btn.disabled = true; btn.textContent = '正在生成…';
+  try {
+    if (raf){ cancelAnimationFrame(raf); raf = 0; }
+    draw();
+    const [W, H] = getSize();
+    const blob = await new Promise(res => cv.toBlob(res, 'image/png'));
+    if (!blob){ toast('图片生成失败，请再试一次'); return; }
+    const name = `wallpaper-${st.preset || 'custom'}-${W}x${H}.png`;
+    const dl = await getDownloads();
+    if (dl){
+      try { await dl.save({filename: name, data: blob}); toast('已保存 ' + name); }
+      catch (e) {
+        const c = e && e.code;
+        if (c === 'declined') toast('已取消保存');
+        else if (c === 'rate_limited') toast('已有一个保存窗口，请先处理它');
+        else showSheet(blob, name);
+      }
+    } else if (!IN_CLAUDE && !isTouch()){
+      fileDownload(blob, name); toast('已下载 ' + name);
+    } else showSheet(blob, name);
+  } finally { btn.disabled = false; btn.textContent = '保存 PNG'; }
+}
+
+/* ---------- boot ---------- */
+buildPresets(); buildFontGrid(); bind(); syncUI(); tick(); setInterval(tick, 20000);
+draw(); renderThumbs(); getDownloads(); loadFonts();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { schedule(); thumbsSoon(); });
+})();
+</script>
+
+</body>
+</html>

@@ -45,16 +45,42 @@ body{margin:0;background:var(--ground);color:var(--ink);font:14px/1.5 var(--sans
 
 .work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:44px;align-items:start}
 .stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);display:flex;flex-direction:column;align-items:center;gap:16px}
-.phone{--ar:.4614;position:relative;width:min(100%,calc(min(74vh,760px) * var(--ar)));aspect-ratio:1290/2796;border-radius:13%/6%;overflow:hidden;background:#20262b;box-shadow:var(--phone-shadow)}
+.phone{--ar:.4614;position:relative;width:min(100%,calc(min(68vh,740px) * var(--ar)));aspect-ratio:1290/2796;border-radius:13%/6%;overflow:hidden;background:#20262b;box-shadow:var(--phone-shadow)}
 .phone canvas{display:block;width:100%;height:100%;object-fit:contain}
 
-.lock{position:absolute;inset:0;pointer-events:none;container-type:inline-size;color:#fff;font-family:-apple-system,"SF Pro Display","PingFang SC",system-ui,sans-serif;text-shadow:0 1px 14px rgba(0,0,0,.14)}
-.lk-island{position:absolute;top:1.3%;left:50%;transform:translateX(-50%);width:31cqw;height:8.6cqw;border-radius:5cqw;background:#050505}
-.lk-date{position:absolute;top:7.6%;left:0;right:0;text-align:center;font-size:5.1cqw;font-weight:600;opacity:.92}
-.lk-time{position:absolute;top:9.7%;left:0;right:0;text-align:center;font-size:24cqw;font-weight:700;letter-spacing:-.02em;line-height:1}
-.lk-btn{position:absolute;bottom:4.7%;width:11.6cqw;height:11.6cqw;border-radius:50%;background:rgba(0,0,0,.24);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* Lock and home screen overlays are preview-only and never exported. Positions follow the iOS 26 editor on Face ID iPhones. */
+.lock,.home{position:absolute;inset:0;pointer-events:none;container-type:inline-size;color:#fff;font-family:-apple-system,"SF Pro Display","PingFang SC",system-ui,sans-serif;text-shadow:0 1px 14px rgba(0,0,0,.14)}
+.lock{--clock:1}
+.cut{position:absolute;left:50%;transform:translateX(-50%);background:#050505}
+.phone[data-cut="island"] .cut{top:1.3%;width:31cqw;height:8.6cqw;border-radius:5cqw}
+.phone[data-cut="notch"] .cut{top:0;width:42cqw;height:7.4cqw;border-radius:0 0 5cqw 5cqw}
+.phone[data-cut="hole"] .cut{top:1.5%;width:6cqw;height:6cqw;border-radius:50%}
+.phone[data-cut="none"] .cut,.phone[data-cut="none"] .lk-bar{display:none}
+.lk-frame{position:absolute;left:5.4%;right:5.4%;display:flex;align-items:center;justify-content:center;gap:1.6cqw;border:max(1px,.5cqw) solid rgba(255,255,255,.45);border-radius:5.5cqw}
+.lk-date{top:7.5%;height:3.5%;border-radius:3.2cqw;font-size:4.6cqw;font-weight:600;white-space:nowrap}
+.lk-clock{top:11.9%;height:calc(3% + 10% * var(--clock))}
+.lk-time{position:absolute;top:13.4%;left:0;right:0;text-align:center;font-size:27cqw;font-weight:700;letter-spacing:-.02em;line-height:.82;opacity:.9;transform:scaleY(var(--clock));transform-origin:50% 0}
+.lk-handle{position:absolute;right:-2.2cqw;bottom:-2.2cqw;width:10cqw;height:10cqw;border:solid rgba(255,255,255,.85);border-width:0 1.8cqw 1.8cqw 0;border-bottom-right-radius:8cqw;pointer-events:auto;cursor:ns-resize;touch-action:none}
+.lk-widgets{height:10%;font-size:4.2cqw;font-weight:600}
+.lk-widgets[data-at="top"]{top:calc(15.9% + 10% * var(--clock))}
+.lk-widgets[data-at="bottom"]{top:74%}
+.lk-widgets[data-at="none"]{display:none}
+.lk-plus{display:grid;place-items:center;width:5.4cqw;height:5.4cqw;border-radius:50%;background:rgba(255,255,255,.92);color:#2a3a4a;font-size:4.8cqw;line-height:1;text-shadow:none}
+.lk-btn{position:absolute;bottom:4.7%;display:grid;place-items:center;width:11.6cqw;height:11.6cqw;border-radius:50%;background:rgba(0,0,0,.24);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.lk-btn svg{width:5.4cqw;height:5.4cqw}
 .lk-btn.l{left:12%}.lk-btn.r{right:12%}
 .lk-bar{position:absolute;bottom:1.1%;left:50%;transform:translateX(-50%);width:36cqw;height:1.3cqw;border-radius:1cqw;background:rgba(255,255,255,.92)}
+.hs-status{position:absolute;top:1.3%;left:0;right:0;height:8.6cqw;display:flex;align-items:center;justify-content:space-between;padding:0 8.5cqw 0 11.5cqw;font-size:4.3cqw;font-weight:600;text-shadow:none}
+.hs-icons{display:flex;align-items:center;gap:1.4cqw}
+.hs-icons svg{display:block;height:3.3cqw;width:auto}
+.hs-search{position:absolute;left:50%;bottom:14.2%;transform:translateX(-50%);height:3.4%;padding:0 3.6cqw;display:flex;align-items:center;gap:1.2cqw;border-radius:99px;font-size:3.4cqw;font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.35);background:rgba(255,255,255,.22);box-shadow:0 1px 4px rgba(0,0,0,.12),inset 0 0 0 1px rgba(255,255,255,.35);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.hs-search svg{width:3.2cqw;height:3.2cqw}
+.hs-dock{position:absolute;left:2.4%;right:2.4%;bottom:1.2%;height:11%;display:flex;align-items:center;justify-content:space-evenly;border-radius:9cqw;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);box-shadow:0 2px 10px rgba(0,0,0,.1);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3)}
+.hs-dock i{width:15.4cqw;height:15.4cqw;border-radius:3.5cqw;background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(0,0,0,.14),inset 0 0 0 1px rgba(255,255,255,.4)}
+.preview-opts,.lock-opts{display:flex;flex-direction:column;gap:12px;width:100%;max-width:460px}
+.range.clock-range{grid-template-columns:1fr auto auto}
+.clock-range .ghost{padding:3px 12px;font-size:12px}
+.ghost:disabled{opacity:.45;cursor:default}
 
 .stage-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;width:100%;max-width:460px}
 .stage-foot{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
@@ -78,7 +104,22 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .gh{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .group h2{margin:0;font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--muted)}
 
-.presets{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:14px 12px}
+.tpl{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.tpl .del{padding:2px 10px;font-size:12px}
+.tpl .del[data-armed]{border-color:#b3261e;color:#b3261e}
+.save-row{display:flex;gap:8px;flex-wrap:wrap}
+.save-row input{flex:1 1 160px;min-width:0}
+.palettes{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:12px 8px}
+.pal{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;padding:0;border:0;background:none;color:var(--muted);font:inherit;font-size:11.5px;cursor:pointer}
+.pal-chip{display:flex;flex-direction:column;width:100%;aspect-ratio:3/4.2;border-radius:8px;overflow:hidden;box-shadow:0 5px 12px -7px rgba(0,0,0,.5);outline:2px solid transparent;outline-offset:2px;transition:outline-color .15s}
+.pal-chip i{display:flex;align-items:center;padding-left:14%;font:italic 600 12px/1 Georgia,"Times New Roman",serif}
+.pal:hover .pal-chip{outline-color:var(--line)}
+.pal[aria-pressed="true"]{color:var(--ink);font-weight:600}
+.pal[aria-pressed="true"] .pal-chip{outline-color:var(--ink)}
+.pal:focus-visible{outline:none}
+.pal:focus-visible .pal-chip{outline-color:var(--accent)}
+.bounds{display:flex;flex-direction:column;gap:14px}
 .preset{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;color:var(--muted);font:inherit;font-size:12px;cursor:pointer}
 .preset canvas{display:block;width:100%;aspect-ratio:132/286;border-radius:8px;box-shadow:0 6px 14px -8px rgba(0,0,0,.45);outline:2px solid transparent;outline-offset:2px;transition:outline-color .15s}
 .preset:hover canvas{outline-color:var(--line)}
@@ -103,6 +144,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .fg-head:first-child{padding-top:0}
 .fchip{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;padding:7px 10px 6px;border:1px solid var(--line);border-radius:9px;background:var(--field);color:var(--ink);cursor:pointer;text-align:left}
 .fchip .fs{display:block;max-width:100%;font-size:18px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fchip .fs svg{display:block;width:100%;height:1.45em}
 .fchip .fn{font:11px/1.3 var(--sans);color:var(--muted)}
 .fchip:hover{border-color:var(--muted)}
 .fchip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
@@ -143,6 +185,36 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
   .stage{position:static}
   .phone{width:min(100%,calc(min(62vh,560px) * var(--ar)))}
 }
+
+/* Categorised editor, with stable navigation and stronger control hierarchy. */
+.app{max-width:1320px}
+.work{grid-template-columns:minmax(300px,.85fr) minmax(0,1.15fr);gap:36px}
+.panel{min-width:0;border:1px solid var(--line);border-radius:20px;background:var(--field);overflow:hidden}
+.editor-head{padding:20px 24px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.editor-head h2{font-size:20px;margin:0;font-weight:800}
+.editor-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.version{font-size:11px;color:var(--muted);white-space:nowrap}
+.editor-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:0 20px 16px;border-bottom:1px solid var(--line)}
+.editor-tabs button{font:inherit;font-weight:650;padding:11px 8px;background:transparent;border:1px solid var(--line);border-radius:10px;color:var(--ink);cursor:pointer}
+.editor-tabs button[aria-selected=true]{background:var(--accent);border-color:var(--accent);color:white}
+.editor-pane{padding:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.group,.group:first-child{padding:18px;border:1px solid var(--line);border-radius:12px;gap:16px;background:var(--ground);min-width:0}
+.group h2{font-size:16px;letter-spacing:0;font-weight:750;color:var(--ink);padding-bottom:10px;border-bottom:1px solid var(--line)}
+.field>label,.flabel,.range label{font-size:13px;font-weight:600;color:var(--ink)}
+.range{gap:8px 6px}.range output{color:var(--accent);font-weight:600}
+#pane-presets>.group,#pane-spacing>.group,#pane-style>.group{grid-column:1/-1}
+#pane-style .colors{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px 28px}
+#pane-style .effects{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}
+#pane-style .effects h2{grid-column:1/-1}
+#pane-spacing>.group{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+#pane-spacing h2,#pane-spacing p,#pane-spacing button{grid-column:1/-1}
+#pane-style .crow{grid-template-columns:32px minmax(0,1fr) 88px;gap:10px}
+#pane-style .crow input[type=color]{width:32px;height:32px}
+.fontgrid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:340px}
+#pane-layout .seg{margin-bottom:4px}.gh h2{flex:1}.gh{align-items:baseline}
+@media(max-width:1000px){.work{grid-template-columns:minmax(250px,.8fr) minmax(0,1.2fr);gap:20px}.editor-pane{grid-template-columns:1fr}.fontgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.work{grid-template-columns:1fr}.stage{position:static}.phone{width:min(100%,calc(min(48vh,460px) * var(--ar)))}.editor-pane{padding:12px}.editor-head{padding:16px}.editor-tabs{padding-inline:12px}.group{padding:14px}#pane-spacing>.group,#pane-style .effects{grid-template-columns:1fr}.version{font-size:10px}}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -150,18 +222,32 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 <div class="app">
   <header class="top">
     <h1>叠卡壁纸工坊</h1>
-    <p>上半屏留给锁屏时钟，文字印在下面那张卡片上。选好配色、改完文字，就能存成 PNG。</p>
+    <p>调节色块长度和三段文字，做出属于自己的分层卡片壁纸。</p>
   </header>
 
   <div class="work">
     <section class="stage" aria-label="预览">
       <div class="phone" id="phone">
         <canvas id="cv" role="img" aria-label="壁纸预览"></canvas>
-        <div class="lock" id="lock" aria-hidden="true">
-          <div class="lk-island"></div>
-          <div class="lk-date" id="lkDate"></div>
+        <div class="lock" id="lock" aria-hidden="true" hidden>
+          <div class="cut"></div>
+          <div class="lk-frame lk-date" id="lkDate"></div>
+          <div class="lk-frame lk-clock"><span class="lk-handle" id="clockHandle" title="拖动调整时间大小"></span></div>
           <div class="lk-time" id="lkTime"></div>
-          <div class="lk-btn l"></div><div class="lk-btn r"></div>
+          <div class="lk-frame lk-widgets" id="lkWidgets"><span class="lk-plus">+</span>添加小组件</div>
+          <div class="lk-btn l"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v4l-2 3v11h-4V10L8 7z"/><path d="M12 13v2"/></svg></div>
+          <div class="lk-btn r"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg></div>
+          <div class="lk-bar"></div>
+        </div>
+        <div class="home" id="home" aria-hidden="true" hidden>
+          <div class="cut"></div>
+          <div class="hs-status"><span id="hsTime"></span><span class="hs-icons">
+            <svg viewBox="0 0 18 12" fill="#fff"><rect y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" width="3" height="12" rx="1"/></svg>
+            <svg viewBox="0 0 16 12" fill="#fff"><path d="M8 12 5.6 9.4a3.4 3.4 0 0 1 4.8 0zM3.5 7.2a6.4 6.4 0 0 1 9 0l-1.5 1.6a4.3 4.3 0 0 0-6 0zM1.3 5a9.6 9.6 0 0 1 13.4 0l-1.5 1.5a7.5 7.5 0 0 0-10.4 0z"/></svg>
+            <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2" y="2" width="17" height="8" rx="2" fill="#fff"/><rect x="24.5" y="4" width="1.8" height="4" rx=".9" fill="#fff" fill-opacity=".5"/></svg>
+          </span></div>
+          <div class="hs-search"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3.5 3.5"/></svg>搜索</div>
+          <div class="hs-dock"><i></i><i></i><i></i><i></i></div>
           <div class="lk-bar"></div>
         </div>
       </div>
@@ -174,32 +260,110 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
         </div>
         <button type="button" class="primary" id="saveBtn">保存 PNG</button>
       </div>
+      <div class="preview-opts">
+        <div class="seg" role="radiogroup" aria-label="预览效果">
+          <label><input type="radio" name="preview" value="wall"><span>仅壁纸</span></label>
+          <label><input type="radio" name="preview" value="lock"><span>锁屏</span></label>
+          <label><input type="radio" name="preview" value="home"><span>主屏幕</span></label>
+        </div>
+        <div class="lock-opts" id="lockOpts" hidden>
+          <div class="field">
+            <span class="flabel" id="widgetsLbl">小组件位置</span>
+            <div class="seg" role="radiogroup" aria-labelledby="widgetsLbl">
+              <label><input type="radio" name="widgets" value="top"><span>时间下方</span></label>
+              <label><input type="radio" name="widgets" value="bottom"><span>屏幕底部</span></label>
+              <label><input type="radio" name="widgets" value="none"><span>不放</span></label>
+            </div>
+          </div>
+          <div class="range clock-range"><label for="r-clockH">时间大小（也可拖动时间框右下角）</label><output id="o-clockH" for="r-clockH"></output><button type="button" class="ghost" id="clockReset">默认</button><input type="range" id="r-clockH" min="100" max="300" step="1"></div>
+        </div>
+      </div>
       <div class="stage-foot">
-        <label class="chk"><input type="checkbox" id="clock"> 预览锁屏时钟（不会导出）</label>
+        <span>锁屏、主屏幕元素仅作预览，不会导出</span>
         <span class="mono" id="dimLabel"></span>
+        <p id="layoutWarning" role="status" hidden>文字超出卡片：请减少间距、调整字号或增加卡片长度。</p>
       </div>
     </section>
 
     <section class="panel" aria-label="设置">
-      <div class="group">
-        <div class="gh"><h2>配色方案</h2><button type="button" class="ghost" id="shuffle">随机一组</button></div>
-        <div class="presets" id="presets"></div>
+      <div class="editor-head"><div><h2>编辑壁纸</h2><p id="layoutStatus"></p></div><span class="version" id="versionLabel">09.30 · 叠纸版</span></div>
+      <div class="editor-tabs" role="tablist" aria-label="编辑分类">
+        <button type="button" role="tab" id="tab-presets" aria-controls="pane-presets" aria-selected="true" tabindex="0" data-tab="presets">预设</button>
+        <button type="button" role="tab" id="tab-layout" aria-controls="pane-layout" aria-selected="false" tabindex="-1" data-tab="layout">版式</button>
+        <button type="button" role="tab" id="tab-style" aria-controls="pane-style" aria-selected="false" tabindex="-1" data-tab="style">外观</button>
+        <button type="button" role="tab" id="tab-text" aria-controls="pane-text" aria-selected="false" tabindex="-1" data-tab="text">文字</button>
+        <button type="button" role="tab" id="tab-spacing" aria-controls="pane-spacing" aria-selected="false" tabindex="-1" data-tab="spacing">间距</button>
       </div>
-
+      <div class="editor-pane" role="tabpanel" id="pane-presets" aria-labelledby="tab-presets">
+      <div class="group">
+        <h2>内置预设</h2>
+        <p class="fnote">一键套用整套版式、配色和字体，不会改动你写的文字。</p>
+        <div class="tpl-grid" id="templates"></div>
+      </div>
+      <div class="group">
+        <h2>我的预设</h2>
+        <p class="fnote">把当前的整套设计（包括文字）存成预设，之后点一下就能恢复。预设只保存在这个浏览器里。</p>
+        <div class="save-row"><input type="text" id="presetName" maxlength="20" placeholder="给预设起个名字（可不填）" autocomplete="off" aria-label="预设名称"><button type="button" class="primary" id="savePreset">保存当前设计</button></div>
+        <div class="tpl-grid" id="myPresets"></div>
+        <p class="fnote" id="myPresetsEmpty">还没有保存的预设。</p>
+      </div>
+      </div>
+      <div class="editor-pane" role="tabpanel" id="pane-layout" aria-labelledby="tab-layout" hidden>
       <div class="group">
         <h2>版式</h2>
         <div class="seg" role="radiogroup" aria-label="版式">
           <label><input type="radio" name="layout" value="stack"><span>叠纸</span></label>
-          <label><input type="radio" name="layout" value="frame3"><span>框格 · 三段</span></label>
-          <label><input type="radio" name="layout" value="frame2"><span>框格 · 两段</span></label>
+          <label><input type="radio" name="layout" value="frame"><span>框格</span></label>
         </div>
-      </div>
-
-      <div class="group">
-        <h2>文字</h2>
-        <div class="field"><label for="title">标题</label><input id="title" type="text" maxlength="40" autocomplete="off"></div>
-        <div class="field" data-only="stack"><label for="subtitle">副标题</label><input id="subtitle" type="text" maxlength="40" autocomplete="off"></div>
         <div class="field">
+          <span class="flabel" id="countLbl">叠纸片数</span>
+          <div class="seg" role="radiogroup" aria-labelledby="countLbl">
+            <label><input type="radio" name="count" value="2"><span>2</span></label>
+            <label><input type="radio" name="count" value="3"><span>3</span></label>
+            <label><input type="radio" name="count" value="4"><span>4</span></label>
+            <label><input type="radio" name="count" value="5"><span>5</span></label>
+          </div>
+        </div>
+        <div class="field" data-only="frame">
+          <span class="flabel" id="titlePanelLbl">标题放在</span>
+          <div class="seg" role="radiogroup" aria-labelledby="titlePanelLbl" id="titlePanelSeg"></div>
+        </div>
+        <div class="range"><label for="r-radius">圆角</label><output id="o-radius" for="r-radius"></output><input type="range" id="r-radius" min="0" max="100" step="1"></div>
+      </div>
+      <div class="group">
+        <h2 id="boundsTitle">每片的位置</h2>
+        <div class="bounds" id="bounds"></div>
+        <p class="fnote" id="boundsNote"></p>
+      </div>
+      </div>
+      <div class="editor-pane" role="tabpanel" id="pane-style" aria-labelledby="tab-style" hidden>
+      <div class="group">
+        <div class="gh"><h2>配色方案</h2><button type="button" class="ghost" id="shuffle">随机一组</button></div>
+        <p class="fnote">每套配色包含深、中、浅色块、底色和文字颜色，会按片数或格数给所有色块上色。</p>
+        <div class="palettes" id="palettes"></div>
+      </div>
+      <div class="group">
+        <h2>颜色</h2>
+        <div class="colors" id="colors"></div>
+      </div>
+      <div class="group effects">
+        <h2>柔光与投影</h2>
+        <div class="range"><label for="r-light">卡片表面柔光</label><output id="o-light" for="r-light"></output><input type="range" id="r-light" min="0" max="100" step="1"></div>
+        <div class="range"><label for="r-shadow">卡片投影</label><output id="o-shadow" for="r-shadow"></output><input type="range" id="r-shadow" min="0" max="100" step="1"></div>
+      </div>
+      </div>
+      <div class="editor-pane" role="tabpanel" id="pane-text" aria-labelledby="tab-text" hidden>
+      <div class="group">
+        <h2>编辑文字</h2>
+        <div class="seg" role="radiogroup" aria-label="要换字体的文字" data-only="stack">
+          <label><input type="radio" name="ftarget" value="font"><span>标题</span></label>
+          <label><input type="radio" name="ftarget" value="sfont"><span>第二段</span></label>
+          <label><input type="radio" name="ftarget" value="qfont"><span>第三段</span></label>
+        </div>
+        <div class="field" data-text-target="font"><label for="title">标题</label><input id="title" type="text" maxlength="40" autocomplete="off"></div>
+        <p class="fnote" id="letteringNote" hidden>当前标题用的是导入的手写图形，固定显示“Positive &amp; Confident”，不随上面的文字改变（清空标题则不显示）。字号、加粗、颜色和左右位置照常可调，字距与全部大写对它无效。</p>
+        <div class="field" data-text-target="sfont" data-only="stack"><label for="subtitle">第二段文字（可换行）</label><textarea id="subtitle" rows="2" maxlength="120"></textarea></div>
+        <div class="field" data-hide="stack">
           <span class="flabel" id="iconLbl">小图标</span>
           <div class="seg" role="radiogroup" aria-labelledby="iconLbl">
             <label><input type="radio" name="icon" value="none"><span>无</span></label>
@@ -209,48 +373,37 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
             <label><input type="radio" name="icon" value="ring"><span>圆环</span></label>
           </div>
         </div>
-        <div class="field" data-only="stack"><label for="quote">小字（可换行）</label><textarea id="quote" rows="3" maxlength="200"></textarea></div>
-        <div class="range"><label for="r-size">标题字号</label><output id="o-size" for="r-size"></output><input type="range" id="r-size" min="70" max="140" step="1"></div>
-        <div class="range" data-only="stack"><label for="r-qsize">小字字号</label><output id="o-qsize" for="r-qsize"></output><input type="range" id="r-qsize" min="70" max="170" step="1"></div>
+        <div class="field" data-text-target="qfont" data-only="stack"><label for="quote">第三段文字（可换行）</label><textarea id="quote" rows="3" maxlength="200"></textarea></div>
+        <div class="range" data-text-target="font"><label for="r-size">标题字号</label><output id="o-size" for="r-size"></output><input type="range" id="r-size" min="70" max="140" step="1"></div>
+        <div class="range" data-text-target="sfont" data-only="stack"><label for="r-ssize">第二段字号</label><output id="o-ssize" for="r-ssize"></output><input type="range" id="r-ssize" min="60" max="180" step="1"></div>
+        <div class="range" data-text-target="qfont" data-only="stack"><label for="r-qsize">第三段字号</label><output id="o-qsize" for="r-qsize"></output><input type="range" id="r-qsize" min="50" max="200" step="1"></div>
+        <div class="range" data-text-target="font"><label for="r-tbold">标题加粗</label><output id="o-tbold" for="r-tbold"></output><input type="range" id="r-tbold" min="0" max="100" step="1"></div>
+        <div class="range" data-text-target="sfont" data-only="stack"><label for="r-sbold">第二段加粗</label><output id="o-sbold" for="r-sbold"></output><input type="range" id="r-sbold" min="0" max="100" step="1"></div>
+        <div class="range" data-text-target="qfont" data-only="stack"><label for="r-qbold">第三段加粗</label><output id="o-qbold" for="r-qbold"></output><input type="range" id="r-qbold" min="0" max="100" step="1"></div>
+        <div class="range" data-text-target="font" data-only="stack"><label for="r-tx">标题左右位置</label><output id="o-tx" for="r-tx"></output><input type="range" id="r-tx" min="-15" max="40" step="0.5"></div>
+        <div class="range" data-text-target="sfont" data-only="stack"><label for="r-sx">第二段左右位置</label><output id="o-sx" for="r-sx"></output><input type="range" id="r-sx" min="-15" max="40" step="0.5"></div>
+        <div class="range" data-text-target="qfont" data-only="stack"><label for="r-qx">第三段左右位置</label><output id="o-qx" for="r-qx"></output><input type="range" id="r-qx" min="-15" max="40" step="0.5"></div>
+        <label class="chk" data-text-target="font"><input type="checkbox" id="upper"> 标题里的英文全部大写</label>
       </div>
-
       <div class="group">
         <h2>字体</h2>
-        <div class="seg" role="radiogroup" aria-label="要换字体的文字" data-only="stack">
-          <label><input type="radio" name="ftarget" value="font"><span>标题</span></label>
-          <label><input type="radio" name="ftarget" value="sfont"><span>副标题</span></label>
-          <label><input type="radio" name="ftarget" value="qfont"><span>小字</span></label>
-        </div>
+
         <div class="fontgrid" id="fontgrid" role="group" aria-label="字体列表"></div>
-        <p class="fnote" id="fontNote" aria-live="polite"></p>
-        <label class="chk"><input type="checkbox" id="upper"> 标题里的英文全部大写</label>
-      </div>
 
+      </div>
+      </div>
+      <div class="editor-pane" role="tabpanel" id="pane-spacing" aria-labelledby="tab-spacing" hidden>
       <div class="group" data-only="stack">
-        <h2>分割线</h2>
-        <div class="seg" role="radiogroup" aria-label="分割线样式">
-          <label><input type="radio" name="rule" value="none"><span>无</span></label>
-          <label><input type="radio" name="rule" value="solid"><span>实线</span></label>
-          <label><input type="radio" name="rule" value="dashed"><span>虚线</span></label>
-          <label><input type="radio" name="rule" value="dotted"><span>圆点</span></label>
-          <label><input type="radio" name="rule" value="double"><span>双线</span></label>
-        </div>
-        <div class="range"><label for="r-rlen">长度（占屏宽）</label><output id="o-rlen" for="r-rlen"></output><input type="range" id="r-rlen" min="5" max="81" step="0.5"></div>
-        <div class="range"><label for="r-rthick">粗细</label><output id="o-rthick" for="r-rthick"></output><input type="range" id="r-rthick" min="1" max="10" step="1"></div>
+        <h2>文字间距与位置</h2>
+        <div class="range"><label for="r-gap1">标题与第二段间距</label><output id="o-gap1" for="r-gap1"></output><input type="range" id="r-gap1" min="0" max="15" step="0.5"></div>
+        <div class="range"><label for="r-gap2">第二段与第三段间距</label><output id="o-gap2" for="r-gap2"></output><input type="range" id="r-gap2" min="0" max="15" step="0.5"></div>
+        <div class="range"><label for="r-leading">文字行距</label><output id="o-leading" for="r-leading"></output><input type="range" id="r-leading" min="90" max="200" step="0.5"></div>
+        <div class="range"><label for="r-inset">文字左右留白</label><output id="o-inset" for="r-inset"></output><input type="range" id="r-inset" min="5" max="25" step="0.5"></div>
+        <div class="range"><label for="r-textY">文字上下位置</label><output id="o-textY" for="r-textY"></output><input type="range" id="r-textY" min="0" max="100" step="0.5"></div>
+        <div class="range"><label for="r-tracking">标题字距</label><output id="o-tracking" for="r-tracking"></output><input type="range" id="r-tracking" min="0" max="30" step="0.5"></div>
+        <p class="fnote">段间距、左右留白按画面宽度计算；上下位置调整顶部留白。字号保持固定；文字超出卡片时会提示。</p>
       </div>
-
-      <div class="group">
-        <h2>颜色</h2>
-        <div class="colors" id="colors"></div>
-      </div>
-
-      <div class="group">
-        <h2>质感</h2>
-        <div class="range"><label for="r-texture">纸纹</label><output id="o-texture" for="r-texture"></output><input type="range" id="r-texture" min="0" max="100" step="1"></div>
-        <div class="range"><label for="r-shadow">光影</label><output id="o-shadow" for="r-shadow"></output><input type="range" id="r-shadow" min="0" max="100" step="1"></div>
-        <div class="range"><label for="r-radius">圆角</label><output id="o-radius" for="r-radius"></output><input type="range" id="r-radius" min="0" max="100" step="1"></div>
-        <div class="range" data-only="stack"><label for="r-cut1">上层卡片下沿</label><output id="o-cut1" for="r-cut1"></output><input type="range" id="r-cut1" min="35" max="65" step="0.5"></div>
-        <div class="range" data-only="stack"><label for="r-cut2">中层卡片下沿</label><output id="o-cut2" for="r-cut2"></output><input type="range" id="r-cut2" min="45" max="92" step="0.5"></div>
+      <div class="group" id="spacingHelp" hidden><h2>文字间距与位置</h2><p>此功能用于叠纸。切换后可以调整三段文字的段间距、行距、留白和位置。</p><button type="button" class="primary" id="useReference">切换到叠纸</button></div>
       </div>
     </section>
   </div>
@@ -273,87 +426,143 @@ const $ = id => document.getElementById(id);
 const KEY = 'dieka-wallpaper-v1';
 const IN_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
 
+// iPhone models through the iPhone 17 line and iPhone Air. cut = the screen cut-out drawn in the lock/home previews.
 const DEVICES = [
-  {id:'plus',  label:'iPhone 6.7″ · 1290×2796', w:1290, h:2796},
-  {id:'pm',    label:'iPhone 6.9″ · 1320×2868', w:1320, h:2868},
-  {id:'pro',   label:'iPhone 6.3″ · 1206×2622', w:1206, h:2622},
-  {id:'std',   label:'iPhone 6.1″ · 1179×2556', w:1179, h:2556},
-  {id:'and',   label:'安卓 FHD+ · 1080×2400',   w:1080, h:2400},
-  {id:'and2k', label:'安卓 QHD+ · 1440×3200',   w:1440, h:3200},
-  {id:'custom',label:'自定义尺寸…',             w:0,    h:0}
+  {id:'pm',     group:'iPhone', inch:'6.9', models:'16 Pro Max / 17 Pro Max',                    w:1320, h:2868, cut:'island'},
+  {id:'plus',   group:'iPhone', inch:'6.7', models:'14 Pro Max / 15 Plus / 15 Pro Max / 16 Plus', w:1290, h:2796, cut:'island'},
+  {id:'max12',  group:'iPhone', inch:'6.7', models:'12 Pro Max / 13 Pro Max / 14 Plus',           w:1284, h:2778, cut:'notch'},
+  {id:'air',    group:'iPhone', inch:'6.5', models:'Air',                                          w:1260, h:2736, cut:'island'},
+  {id:'xsmax',  group:'iPhone', inch:'6.5', models:'XS Max / 11 Pro Max',                          w:1242, h:2688, cut:'notch'},
+  {id:'pro',    group:'iPhone', inch:'6.3', models:'16 Pro / 17 / 17 Pro',                         w:1206, h:2622, cut:'island'},
+  {id:'std',    group:'iPhone', inch:'6.1', models:'14 Pro / 15 / 15 Pro / 16',                    w:1179, h:2556, cut:'island'},
+  {id:'std12',  group:'iPhone', inch:'6.1', models:'12 / 12 Pro / 13 / 13 Pro / 14 / 16e',         w:1170, h:2532, cut:'notch'},
+  {id:'xr',     group:'iPhone', inch:'6.1', models:'XR / 11',                                      w:828,  h:1792, cut:'notch'},
+  {id:'x',      group:'iPhone', inch:'5.8', models:'X / XS / 11 Pro',                              w:1125, h:2436, cut:'notch'},
+  {id:'mini',   group:'iPhone', inch:'5.4', models:'12 mini / 13 mini',                            w:1080, h:2340, cut:'notch'},
+  {id:'se',     group:'iPhone', inch:'4.7', models:'SE 第 2、3 代 / 6s / 7 / 8',                   w:750,  h:1334, cut:'none'},
+  {id:'and',    group:'安卓', label:'FHD+ · 1080×2400', w:1080, h:2400, cut:'hole'},
+  {id:'and2k',  group:'安卓', label:'QHD+ · 1440×3200', w:1440, h:3200, cut:'hole'},
+  {id:'custom', label:'自定义尺寸…', w:0, h:0, cut:'island'}
 ];
+const deviceLabel = d => d.label || `${d.inch}″ · ${d.models} · ${d.w}×${d.h}`;
 
-const PRESETS = [
-  {id:'sky',   name:'晴空蓝', layout:'stack',  c1:'#2b5a8a', c2:'#e6dfcf', c3:'#1c2733', bg:'#344a5c', ink:'#1a2029', texture:45, shadow:60, radius:50, cut1:52,   cut2:75.5, font:'sans'},
-  {id:'mist',  name:'雾蓝',   layout:'stack',  c1:'#7394a7', c2:'#8fb2ab', c3:'#5c596e', bg:'#344a5c', ink:'#162024', texture:75, shadow:70, radius:50, cut1:52,   cut2:75.5, font:'sans'},
-  {id:'olive', name:'橄榄',   layout:'stack',  c1:'#6c7752', c2:'#c79352', c3:'#3a3a3c', bg:'#344a5c', ink:'#1c1811', texture:65, shadow:70, radius:50, cut1:52,   cut2:75.5, font:'sans'},
-  {id:'brave', name:'勇气',   layout:'stack',  c1:'#07345c', c2:'#e0c79f', c3:'#85130f', bg:'#344a5c', ink:'#17130f', texture:6,  shadow:55, radius:66, cut1:54.5, cut2:75.7, font:'sans'},
-  {id:'sunny', name:'晴日',   layout:'frame3', bg:'#344a5c', c1:'#b8c7ba', c2:'#4a6377', c3:'#f1dcb4', ink:'#f4e2bc', texture:12, shadow:35, radius:50, font:'script'},
-  {id:'dusk',  name:'暮色',   layout:'frame2', bg:'#344a5c', c1:'#bac5bd', c2:'#7a909f', c3:'#9dabb4', ink:'#f4e2bc', texture:12, shadow:35, radius:50, font:'script'}
+/* A palette is a complete colour set, independent of layout: deep → mid → light block colours
+   (spread into a five-step ramp), the base behind the blocks, and the text colour(s). */
+const PALETTES = [
+  {id:'positive',   name:'晴蓝海报', keys:['#285789','#5f8fc0','#c5e0f4'], base:'#fff8ef', text:['#285789']},
+  {id:'klein',      name:'克莱因蓝', keys:['#1c2f9e','#5566c8','#d8ddf3'], base:'#f6f5f0', text:['#1c2f9e']},
+  {id:'mauve',      name:'雾紫',     keys:['#5a4a6e','#8b7aa3','#e3dcec'], base:'#f5f2f0', text:['#4a3b5c']},
+  {id:'burgundy',   name:'勃艮第',   keys:['#6d1f2b','#a4505a','#efd8d4'], base:'#f8f1ec', text:['#6d1f2b']},
+  {id:'terracotta', name:'赤陶',     keys:['#a3553b','#cc8a6a','#f1dbc9'], base:'#f8f1e8', text:['#7b3b26']},
+  {id:'mocha',      name:'焦糖摩卡', keys:['#6b4a37','#a47b5c','#ead9c6'], base:'#f7f0e6', text:['#5a3d2c']},
+  {id:'champagne',  name:'炭灰香槟', keys:['#2c2c2f','#6e6a64','#eadfcb'], base:'#f7f3eb', text:['#2c2c2f']},
+  {id:'forest',     name:'墨绿',     keys:['#2e4a3b','#5f7f69','#d5e0d3'], base:'#f4efe6', text:['#2e4a3b']},
+  {id:'sage',       name:'鼠尾草',   keys:['#72836f','#9fae98','#e0e7da'], base:'#f5f3ec', text:['#46553f']},
+  {id:'morandi',    name:'莫兰迪',   keys:['#958087','#b9a6aa','#e7dcd9'], base:'#f3efeb', text:['#5d4b50']},
+  {id:'slate',      name:'石板',     keys:['#344a5c','#4a6377','#b8c7ba'], base:'#f1dcb4', text:['#344a5c']},
+  {id:'mist',       name:'雾蓝',     keys:['#7394a7','#83a3a9','#8fb2ab'], base:'#5c596e', text:['#162024']},
+  {id:'olive',      name:'橄榄',     keys:['#6c7752','#9a8552','#c79352'], base:'#3a3a3c', text:['#1c1811']},
+  {id:'brave',      name:'勇气',     keys:['#07345c','#5b6f80','#e0c79f'], base:'#85130f', text:['#17130f']}
 ];
-const PRESET_KEYS = ['layout','c1','c2','c3','bg','ink','texture','shadow','radius','cut1','cut2'];
+function paletteColors(p){
+  const [a, b, c] = p.keys, t = p.text;
+  return {ramp:[a, mix(a, b, .5), b, mix(b, c, .5), c], base:p.base, tint:t[0], sink:t[1] || t[0], qink:t[2] || t[0]};
+}
+// Which ramp colours n sheets or panels use: always the deepest and the lightest, the rest spread evenly between.
+const rampSlots = n => Array.from({length:n}, (_, i) => Math.round(i*4/(n-1)));
+
+/* Framed layout: panels between fixed top/bottom margins, split at adjustable boundaries (% of height). */
+const FRAME = {top:4.5, bottom:95.2, gap:3.4, min:6};
+const FRAME_SPLITS = {2:[72], 3:[50,67], 4:[36,54,71], 5:[30,44,58,72]};
+
+// Built-in templates set the whole look (layout, palette, fonts, effects) but never the text itself.
+const TEMPLATES = [
+  {id:'positive', name:'晴蓝海报', palette:'positive', style:{}},
+  {id:'klein4',   name:'克莱因四层', palette:'klein', style:{layers:4, cuts:[40,46,52,82], radius:64, font:'sans', qfont:'script'}},
+  {id:'morandi5', name:'莫兰迪五层', palette:'morandi', style:{layers:5, cuts:[30,36,42,48,82], radius:56, font:'cormorant', sfont:'lora-italic', qfont:'dancing'}},
+  {id:'sunny',    name:'晴日框格', palette:null, style:{layout:'frame', panels:3, splits:[50,67], titlePanel:2, radius:50, shadow:35, font:'script',
+    base:'#344a5c', ramp:['#b8c7ba','#82958f','#4a6377','#9e9f96','#f1dcb4'], tint:'#f4e2bc', sink:'#f4e2bc', qink:'#f4e2bc'}}
+];
 
 /* ---------- fonts ---------- */
 const FB = {
   sans:  '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif',
   serif: '"Songti SC","STSong","SimSun","Noto Serif SC",serif',
-  hand:  '"Kaiti SC","STKaiti","KaiTi",cursive',
+  hand:  '"Brush Script MT","Segoe Script","Kaiti SC","STKaiti","KaiTi",cursive',
   mono:  '"PingFang SC","Microsoft YaHei",monospace'
 };
+/* Fonts with srcs come from Chinese font hosts; their CSS sources are tried in order. */
+const ZS = 'https://fontsapi.zeoseven.com/', NPMM = 'https://registry.npmmirror.com/', JSD = 'https://cdn.jsdelivr.net/npm/';
+// Grouped by style, not by where the font is served from.
 const FONT_GROUPS = [
-  {name:'英文 · 无衬线', fonts:[
+  {name:'手写', fonts:[
+    {id:'lettering',  fam:'Grape Nuts',         label:'参考手写 · 导入图形', wt:400, wb:400, fb:'hand', art:true},
+    {id:'caveat',     fam:'Caveat',             label:'Caveat 笔记',    wt:700, wb:500, fb:'hand', scale:1.3,  lh:1.3},
+    {id:'kalam',      fam:'Kalam',              label:'Kalam 手写',     wt:400, wb:400, fb:'hand', lh:1.35},
+    {id:'patrick',    fam:'Patrick Hand',       label:'Patrick Hand 笔迹', wt:400, wb:400, fb:'hand', lh:1.3},
+    {id:'grapenuts',  fam:'Grape Nuts',         label:'Grape Nuts 斜笔', wt:400, wb:400, fb:'hand', scale:1.25, lh:1.35},
+    {id:'mynerve',    fam:'Mynerve',            label:'Mynerve 手写',   wt:400, wb:400, fb:'hand', lh:1.35},
+    {id:'nanumbrush', fam:'Nanum Brush Script', label:'Nanum 细笔刷',   wt:400, wb:400, fb:'hand', scale:1.4, lh:1.35},
+    {id:'hand',       fam:'Gochi Hand',         label:'Gochi 手写',     wt:400, wb:400, fb:'hand', scale:1.12, lh:1.35}
+  ]},
+  {name:'花体 · 连笔', fonts:[
+    {id:'script',     fam:'Satisfy',            label:'Satisfy 花体',   wt:400, wb:400, fb:'hand', scale:1.2,  lh:1.45},
+    {id:'dancing',    fam:'Dancing Script',     label:'Dancing 连笔',   wt:700, wb:500, fb:'hand', scale:1.2,  lh:1.4},
+    {id:'pacifico',   fam:'Pacifico',           label:'Pacifico 圆润',  wt:400, wb:400, fb:'hand', lh:1.6}
+  ]},
+  {name:'斜体', fonts:[
+    {id:'lora-italic',      fam:'Lora',               label:'Lora 斜体',       wt:500, wb:500, style:'italic', fb:'serif'},
+    {id:'cormorant-italic', fam:'Cormorant Garamond', label:'Cormorant 斜体',  wt:600, wb:600, style:'italic', fb:'serif', scale:1.12},
+    {id:'libre-italic',     fam:'Libre Baskerville',  label:'Libre Baskerville 斜体', wt:400, wb:400, style:'italic', fb:'serif'}
+  ]},
+  {name:'无衬线', fonts:[
     {id:'sans',       fam:'Archivo',            label:'Archivo 黑体',   wt:800, wb:500, fb:'sans',  upper:true},
     {id:'montserrat', fam:'Montserrat',         label:'Montserrat 几何', wt:800, wb:500, fb:'sans',  upper:true, scale:.95},
     {id:'oswald',     fam:'Oswald',             label:'Oswald 窄体',    wt:600, wb:500, fb:'sans',  upper:true},
     {id:'bebas',      fam:'Bebas Neue',         label:'Bebas 海报',     wt:400, wb:400, fb:'sans',  upper:true, scale:1.15},
     {id:'fredoka',    fam:'Fredoka',            label:'Fredoka 圆体',   wt:600, wb:500, fb:'sans',  upper:true}
   ]},
-  {name:'英文 · 衬线', fonts:[
+  {name:'衬线', fonts:[
     {id:'dmserif',    fam:'DM Serif Display',   label:'DM Serif',       wt:400, wb:400, fb:'serif', upper:true, scale:1.05},
     {id:'playfair',   fam:'Playfair Display',   label:'Playfair 杂志',  wt:800, wb:500, fb:'serif', upper:true},
     {id:'cormorant',  fam:'Cormorant Garamond', label:'Cormorant 古典', wt:700, wb:600, fb:'serif', upper:true, scale:1.12}
-  ]},
-  {name:'手写 · 花体', fonts:[
-    {id:'hand',       fam:'Gochi Hand',         label:'Gochi 手写',     wt:400, wb:400, fb:'hand', scale:1.12, lh:1.35},
-    {id:'caveat',     fam:'Caveat',             label:'Caveat 笔记',    wt:700, wb:500, fb:'hand', scale:1.3,  lh:1.3},
-    {id:'script',     fam:'Satisfy',            label:'Satisfy 花体',   wt:400, wb:400, fb:'hand', scale:1.2,  lh:1.45},
-    {id:'dancing',    fam:'Dancing Script',     label:'Dancing 连笔',   wt:700, wb:500, fb:'hand', scale:1.2,  lh:1.4},
-    {id:'pacifico',   fam:'Pacifico',           label:'Pacifico 圆润',  wt:400, wb:400, fb:'hand', lh:1.6}
   ]},
   {name:'等宽', fonts:[
     {id:'mono',       fam:'IBM Plex Mono',      label:'Plex Mono',      wt:600, wb:500, fb:'mono', upper:true, scale:.92},
     {id:'spacemono',  fam:'Space Mono',         label:'Space Mono',     wt:700, wb:400, fb:'mono', upper:true, scale:.92}
   ]},
-  {name:'中文', fonts:[
+  {name:'中文 · 黑体与圆体', fonts:[
     {id:'notosans',   fam:'Noto Sans SC',          label:'思源黑体',   wt:900, wb:500, fb:'sans',  upper:true, lh:1.45},
-    {id:'notoserif',  fam:'Noto Serif SC',         label:'思源宋体',   wt:900, wb:500, fb:'serif', upper:true, lh:1.45},
-    {id:'xiaowei',    fam:'ZCOOL XiaoWei',         label:'站酷小薇',   wt:400, wb:400, fb:'serif', lh:1.45},
+    {id:'smiley',     fam:'Smiley Sans Oblique',   label:'得意黑',     wt:400, wb:400, fb:'sans',  lh:1.4, upper:true,
+      srcs:[NPMM + '@chinese-fonts/dyh/3.0.0/files/dist/SmileySans-Oblique/result.css', JSD + '@chinese-fonts/dyh@3.0.0/dist/SmileySans-Oblique/result.css', ZS + '92/main/result.css']},
     {id:'huangyou',   fam:'ZCOOL QingKe HuangYou', label:'庆科黄油体', wt:400, wb:400, fb:'sans',  lh:1.45},
     {id:'kuaile',     fam:'ZCOOL KuaiLe',          label:'站酷快乐体', wt:400, wb:400, fb:'sans',  lh:1.45},
+    {id:'jiangcheng', fam:'JiangChengYuanTi',      label:'江城圆体',   wt:400, wb:400, fb:'sans',  lh:1.45, upper:true, srcs:[ZS + '59/main/result.css']},
+    {id:'maoken',     fam:'MaoKenTangYuan (beta)', label:'猫啃网糖圆', wt:400, wb:400, fb:'sans',  lh:1.45, upper:true, srcs:[ZS + '383/main/result.css']}
+  ]},
+  {name:'中文 · 宋体与仿宋', fonts:[
+    {id:'notoserif',  fam:'Noto Serif SC',         label:'思源宋体',   wt:900, wb:500, fb:'serif', upper:true, lh:1.45},
+    {id:'xiaowei',    fam:'ZCOOL XiaoWei',         label:'站酷小薇',   wt:400, wb:400, fb:'serif', lh:1.45},
+    {id:'kinghwa',    fam:'KingHwaOldSong',        label:'京华老宋体', wt:400, wb:400, fb:'serif', lh:1.45, upper:true, srcs:[ZS + '309/main/result.css']},
+    {id:'zhuque',     fam:'Zhuque Fangsong (technical preview)', label:'朱雀仿宋', wt:400, wb:400, fb:'serif', lh:1.45, upper:true, srcs:[ZS + '7/main/result.css']}
+  ]},
+  {name:'中文 · 楷体与书法', fonts:[
+    {id:'wenkai',     fam:'LXGW WenKai',           label:'霞鹜文楷',   wt:400, wb:400, fb:'hand',  lh:1.45,
+      srcs:[NPMM + 'lxgw-wenkai-webfont/1.7.0/files/lxgwwenkai-regular.css', JSD + 'lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css', ZS + '292/main/result.css']},
+    {id:'yfhct',      fam:'YFHCT',                 label:'云峰寒蝉体', wt:400, wb:400, fb:'hand',  lh:1.45, srcs:[ZS + '444/main/result.css']},
     {id:'mashan',     fam:'Ma Shan Zheng',         label:'马善政毛笔', wt:400, wb:400, fb:'hand',  scale:1.1,  lh:1.45},
     {id:'longcang',   fam:'Long Cang',             label:'龙藏手写',   wt:400, wb:400, fb:'hand',  scale:1.15, lh:1.45},
     {id:'zhimang',    fam:'Zhi Mang Xing',         label:'志莽行书',   wt:400, wb:400, fb:'hand',  scale:1.15, lh:1.45}
   ]}
 ];
-/* Fonts served by Chinese font hosts; each lists sources in the order they are tried. */
-const ZS = 'https://fontsapi.zeoseven.com/', NPMM = 'https://registry.npmmirror.com/', JSD = 'https://cdn.jsdelivr.net/npm/';
-const EXTRA_GROUP = {name:'中文 · 国内字体站', extra:true, fonts:[
-  {id:'wenkai',     fam:'LXGW WenKai',                         label:'霞鹜文楷',   wt:400, wb:400, fb:'hand',  lh:1.45,
-    srcs:[NPMM + 'lxgw-wenkai-webfont/1.7.0/files/lxgwwenkai-regular.css', JSD + 'lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css', ZS + '292/main/result.css']},
-  {id:'smiley',     fam:'Smiley Sans Oblique',                 label:'得意黑',     wt:400, wb:400, fb:'sans',  lh:1.4, upper:true,
-    srcs:[NPMM + '@chinese-fonts/dyh/3.0.0/files/dist/SmileySans-Oblique/result.css', JSD + '@chinese-fonts/dyh@3.0.0/dist/SmileySans-Oblique/result.css', ZS + '92/main/result.css']},
-  {id:'jiangcheng', fam:'JiangChengYuanTi',                    label:'江城圆体',   wt:400, wb:400, fb:'sans',  lh:1.45, upper:true, srcs:[ZS + '59/main/result.css']},
-  {id:'maoken',     fam:'MaoKenTangYuan (beta)',               label:'猫啃网糖圆', wt:400, wb:400, fb:'sans',  lh:1.45, upper:true, srcs:[ZS + '383/main/result.css']},
-  {id:'yfhct',      fam:'YFHCT',                               label:'云峰寒蝉体', wt:400, wb:400, fb:'hand',  lh:1.45, srcs:[ZS + '444/main/result.css']},
-  {id:'zhuque',     fam:'Zhuque Fangsong (technical preview)', label:'朱雀仿宋',   wt:400, wb:400, fb:'serif', lh:1.45, upper:true, srcs:[ZS + '7/main/result.css']},
-  {id:'kinghwa',    fam:'KingHwaOldSong',                      label:'京华老宋体', wt:400, wb:400, fb:'serif', lh:1.45, upper:true, srcs:[ZS + '309/main/result.css']}
-]};
-if (!IN_CLAUDE) FONT_GROUPS.push(EXTRA_GROUP);
 const FONTS = {};
-FONT_GROUPS.concat(IN_CLAUDE ? [EXTRA_GROUP] : []).forEach(g => g.fonts.forEach(f => { FONTS[f.id] = f; }));
+FONT_GROUPS.forEach(g => g.fonts.forEach(f => { FONTS[f.id] = f; }));
+const HOSTED_FONTS = Object.values(FONTS).filter(f => f.srcs);
+// Inside Claude the Chinese font hosts are unreachable, so those fonts stay known (for saved state) but are not listed.
+if (IN_CLAUDE) FONT_GROUPS.forEach(g => { g.fonts = g.fonts.filter(f => !f.srcs); });
 
 /* Google Fonts is tried directly first, then through mirrors reachable from mainland China. */
-const GF_Q = 'family=Archivo:wght@400;500;600;800&family=Bebas+Neue&family=Caveat:wght@500;700&family=Cormorant+Garamond:wght@600;700&family=DM+Serif+Display&family=Dancing+Script:wght@500;700&family=Fredoka:wght@500;600&family=Gochi+Hand&family=IBM+Plex+Mono:wght@400;500;600&family=Long+Cang&family=Ma+Shan+Zheng&family=Montserrat:wght@500;800&family=Noto+Sans+SC:wght@500;900&family=Noto+Serif+SC:wght@500;900&family=Oswald:wght@500;600&family=Pacifico&family=Playfair+Display:wght@500;800&family=Satisfy&family=Space+Mono:wght@400;700&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=ZCOOL+XiaoWei&family=Zhi+Mang+Xing&display=swap';
+const GF_Q = 'family=Archivo:wght@400;500;600;800&family=Bebas+Neue&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Serif+Display&family=Dancing+Script:wght@500;700&family=Fredoka:wght@500;600&family=Gochi+Hand&family=IBM+Plex+Mono:wght@400;500;600&family=Long+Cang&family=Ma+Shan+Zheng&family=Montserrat:wght@500;800&family=Noto+Sans+SC:wght@500;900&family=Noto+Serif+SC:wght@500;900&family=Oswald:wght@500;600&family=Pacifico&family=Playfair+Display:wght@500;800&family=Satisfy&family=Space+Mono:wght@400;700&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=ZCOOL+XiaoWei&family=Zhi+Mang+Xing&family=Kalam:wght@400&family=Patrick+Hand&family=Grape+Nuts&family=Mynerve&family=Nanum+Brush+Script&family=Lora:ital,wght@1,500&family=Libre+Baskerville:ital,wght@1,400&display=swap';
 const GF_SRCS = [
   {name:'Google Fonts',          url:'https://fonts.googleapis.com/css2?' + GF_Q},
   {name:'Google Fonts 中国节点', url:'https://fonts.googleapis.cn/css2?' + GF_Q},
@@ -383,44 +592,28 @@ async function trySources(urls,probeFont,probeText){
   }
   return null;
 }
-let gState = 'loading', gName = '';
 function fontsChanged(){ tried.clear(); schedule(); thumbsSoon(); }
-function updateFontNote(){
-  const parts = [];
-  if (gState === 'loading') parts.push('正在加载字体…');
-  else if (gState === 'failed') parts.push('Google 字体和它的镜像都没连上，这部分暂时用系统字体显示。');
-  else parts.push('英文和思源等字体来自 ' + gName + '。');
-  if (IN_CLAUDE) parts.push('GitHub 独立版里另有霞鹜文楷、得意黑等 7 款来自国内字体站的中文字体。');
-  else {
-    const failed = EXTRA_GROUP.fonts.filter(f => f.state === 'failed').length;
-    if (failed) parts.push(`国内字体站有 ${failed} 款没加载成功，已先隐藏。`);
-  }
-  $('fontNote').textContent = parts.join(' ');
-}
-function markExtra(f){
+function markHosted(f){
   const b = document.querySelector(`.fchip[data-id="${f.id}"]`);
-  if (b){ b.dataset.state = f.state; b.hidden = f.state === 'failed'; }
-  const head = $('fg-extra');
-  if (head) head.hidden = EXTRA_GROUP.fonts.every(x => x.state === 'failed');
+  if (!b) return;
+  b.dataset.state = f.state; b.hidden = f.state === 'failed';
+  // Hide a style heading once every font under it has failed to load.
+  const head = $('fg-' + b.dataset.group);
+  if (head) head.hidden = [...document.querySelectorAll(`.fchip[data-group="${b.dataset.group}"]`)].every(x => x.hidden);
 }
 function loadFonts(){
-  updateFontNote();
-  trySources(GF_SRCS.map(s => s.url), '800 20px "Archivo"', 'Aa').then(url => {
-    const s = GF_SRCS.find(x => x.url === url);
-    gState = s ? 'ok' : 'failed'; gName = s ? s.name : '';
-    fontsChanged(); updateFontNote();
-  });
+  trySources(GF_SRCS.map(s => s.url), '800 20px "Archivo"', 'Aa').then(fontsChanged);
   if (IN_CLAUDE) return;
-  for (const f of EXTRA_GROUP.fonts){
+  for (const f of HOSTED_FONTS){
     trySources(f.srcs, `400 24px "${f.fam}"`, '永').then(url => {
       f.state = url ? 'ready' : 'failed';
-      markExtra(f); fontsChanged(); updateFontNote();
+      markHosted(f); fontsChanged();
     });
   }
 }
 const fontOf = id => FONTS[id] || FONTS.sans;
 const famCss = f => `"${f.fam}",${FB[f.fb]}`;
-function fontCss(id,role,px){ const f = fontOf(id); return `${role === 'title' ? f.wt : f.wb} ${px*(f.scale || 1)}px ${famCss(f)}`; }
+function fontCss(id,role,px){ const f = fontOf(id); return `${f.style || 'normal'} ${role === 'title' ? f.wt : f.wb} ${px*(f.scale || 1)}px ${famCss(f)}`; }
 const tried = new Set();
 function useFont(ctx,font,text){
   ctx.font = font;
@@ -434,31 +627,87 @@ function useFont(ctx,font,text){
   document.fonts.load(font, text).then(() => { schedule(); thumbsSoon(); }, () => {});
 }
 
-const COLOR_ORDER = {stack:['c1','c2','c3','ink'], frame3:['bg','c1','c2','c3','ink'], frame2:['bg','c1','c2','c3','ink']};
-const COLOR_LABELS = {
-  stack:  {c1:'上层卡片', c2:'中层卡片', c3:'底色', ink:'文字'},
-  frame3: {bg:'底色', c1:'上格', c2:'中间条', c3:'下格', ink:'文字'},
-  frame2: {bg:'底色', c1:'上格 · 顶部', c2:'上格 · 底部', c3:'下格', ink:'文字'}
-};
-const RANGES = ['size','qsize','texture','shadow','radius','cut1','cut2','rlen','rthick'];
-const PCT_RANGES = ['size','qsize','cut1','cut2','rlen'];
+const RANGES = ['size','ssize','qsize','tbold','sbold','qbold','tx','sx','qx','light','gap1','gap2','leading','inset','textY','tracking','shadow','radius'];
+const PCT_RANGES = ['size','ssize','qsize','tbold','sbold','qbold','light','gap1','gap2','leading','inset','textY','tracking'];
 
-const DEFAULT = Object.assign({}, PRESETS[0], {
-  preset:'sky', title:'Do your best', subtitle:'Day One', icon:'sun',
-  quote:"What's gone is done.\nLive today and do your best.",
-  sfont:'sans', qfont:'sans', qsize:100, rule:'solid', rlen:21.5, rthick:4,
-  upper:true, size:100, device:'plus', cw:1290, ch:2796, clock:true
-});
-delete DEFAULT.id; delete DEFAULT.name;
+// Viewing options: remembered, but not part of a design or a saved preset.
+const VIEW_KEYS = ['device','cw','ch','preview','widgets','clockH'];
+const DEFAULT = Object.assign({
+  layout:'stack', layers:2, cuts:[52,82], panels:3, splits:[50,67], titlePanel:3, radius:72, shadow:48, light:75,
+  palette:'positive',
+  title:'POSITIVE', subtitle:'What’s gone is done\nlive today and', quote:'Do your best', icon:'none',
+  font:'montserrat', sfont:'montserrat', qfont:'dancing', size:100, ssize:100, qsize:82, tbold:0, sbold:0, qbold:0, tx:0, sx:0, qx:0, upper:true,
+  gap1:2, gap2:3, leading:125, inset:11.5, textY:65, tracking:6,
+  device:'plus', cw:1290, ch:2796, preview:'wall', widgets:'top', clockH:100
+}, paletteColors(PALETTES[0]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const HEX = /^#[0-9a-f]{6}$/i;
 
-let st = Object.assign({}, DEFAULT);
+/* Keep boundaries ordered and apart: moving one pushes its neighbours instead of crossing them.
+   gap(j) is the minimum distance between a[j-1] and a[j]. */
+function fitBounds(a,i,lo,hi,gap){
+  for (let j = i+1; j < a.length; j++) a[j] = Math.max(a[j], a[j-1] + gap(j));
+  for (let j = i-1; j >= 0; j--) a[j] = Math.min(a[j], a[j+1] - gap(j+1));
+  if (a[a.length-1] > hi){ a[a.length-1] = hi; for (let j = a.length-2; j >= 0; j--) a[j] = Math.min(a[j], a[j+1] - gap(j+1)); }
+  if (a[0] < lo){ a[0] = lo; for (let j = 1; j < a.length; j++) a[j] = Math.max(a[j], a[j-1] + gap(j)); }
+  return a;
+}
+// Stack sheet bottoms (% of height). The last sheet holds the text and keeps at least 8% visible; the others 2%.
+const stackGap = n => j => j === n-1 ? 8 : 2;
+function fitCuts(c,i){ return fitBounds(c, i, 12, 95, stackGap(c.length)); }
+function resizeCuts(c,n){
+  // Fewer sheets keep the text sheet and those just above it; extra sheets appear as 4% slivers on top.
+  c = c.slice(-n);
+  while (c.length < n) c.unshift(c[0] - 4);
+  return fitCuts(c, c.length-1);
+}
+function fitSplits(a,i){ return fitBounds(a, i, FRAME.top + FRAME.min + FRAME.gap/2, FRAME.bottom - FRAME.min - FRAME.gap/2, () => FRAME.min + FRAME.gap); }
+
+// Older saves used layout names frame3/frame2, two cut fields and c1/c2/c3/bg/ink colours.
+function migrate(S){
+  if (S.layout === 'reference') S.layout = 'stack';
+  if (!S.ramp && HEX.test(S.c1) && HEX.test(S.c2)){
+    const frame = S.layout === 'frame3' || S.layout === 'frame2';
+    S.ramp = frame ? [S.c1, mix(S.c1, S.c2, .5), S.c2, mix(S.c2, S.c3 || S.c2, .5), S.c3 || S.c2] : [0, .25, .5, .75, 1].map(t => mix(S.c1, S.c2, t));
+    S.base = frame ? S.bg : S.c3;
+    if (frame) S.tint = S.sink = S.qink = S.ink;
+  }
+  if (S.layout === 'frame3' || S.layout === 'frame2'){
+    S.panels = S.layout === 'frame3' ? 3 : 2; S.splits = FRAME_SPLITS[S.panels].slice(); S.titlePanel = S.layout === 'frame3' ? 2 : 1; S.layout = 'frame';
+  }
+  if (!Array.isArray(S.cuts) && S.cut1 != null) S.cuts = [+S.cut1, Math.max(+S.cut2, +S.cut1 + 8)];
+  if (S.preset && !S.palette) S.palette = S.preset;
+  if (S.clock && (!S.preview || S.preview === 'wall')) S.preview = 'lock';
+  // The divider (rule, rlen, rthick) was removed at the user's request.
+  ['c1','c2','c3','bg','ink','cut1','cut2','preset','clock','rule','rlen','rthick'].forEach(k => delete S[k]);
+  return S;
+}
+function normalize(S){
+  const nums = (a, n) => Array.isArray(a) && a.length === n && a.every(v => Number.isFinite(+v)) ? a.map(Number) : null;
+  if (!['stack','frame'].includes(S.layout)) S.layout = 'stack';
+  S.layers = Math.round(clampRange(S.layers,2,5,2));
+  S.cuts = nums(S.cuts, S.layers) ? fitCuts(nums(S.cuts, S.layers), S.layers-1) : resizeCuts(DEFAULT.cuts.slice(), S.layers);
+  S.panels = Math.round(clampRange(S.panels,2,5,3));
+  S.splits = fitSplits(nums(S.splits, S.panels-1) || FRAME_SPLITS[S.panels].slice(), 0);
+  S.titlePanel = Math.round(clampRange(S.titlePanel,1,S.panels,S.panels));
+  if (!Array.isArray(S.ramp) || S.ramp.length !== 5 || !S.ramp.every(c => HEX.test(c))) S.ramp = DEFAULT.ramp.slice();
+  ['base','tint','sink','qink'].forEach(k => { if (!HEX.test(S[k])) S[k] = DEFAULT[k]; });
+  if (!PALETTES.some(p => p.id === S.palette)) S.palette = null;
+  if (!DEVICES.some(d => d.id === S.device)) S.device = 'plus';
+  ['font','sfont','qfont'].forEach(k => { if (!FONTS[S[k]] || (k !== 'font' && FONTS[S[k]].art)) S[k] = 'sans'; });
+  if (!['wall','lock','home'].includes(S.preview)) S.preview = 'wall';
+  if (!['top','bottom','none'].includes(S.widgets)) S.widgets = 'top';
+  S.clockH = clampRange(S.clockH,100,300,100);
+  return S;
+}
+function clampRange(v,min,max,fallback){ v = Number(v); return Number.isFinite(v) ? Math.max(min,Math.min(max,v)) : fallback; }
+
+let st = clone(DEFAULT);
 try {
   const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
-  if (saved && typeof saved === 'object') Object.assign(st, saved);
+  if (saved && typeof saved === 'object') Object.assign(st, migrate(saved));
 } catch (e) {}
-if (!COLOR_ORDER[st.layout]) st.layout = 'stack';
-if (!DEVICES.some(d => d.id === st.device)) st.device = 'plus';
-['font','sfont','qfont'].forEach(k => { if (!FONTS[st[k]]) st[k] = 'sans'; });
+normalize(st);
 let ftarget = 'font';
 
 /* ---------- colour helpers ---------- */
@@ -470,48 +719,18 @@ function lum(hex){ const c = hexToRgb(hex).map(v => { v /= 255; return v <= .039
 function hsl(h,s,l){ s /= 100; l /= 100; const a = s*Math.min(l,1-l); const f = n => { const k = (n + h/30) % 12; return l - a*Math.max(-1, Math.min(k-3, 9-k, 1)); }; return rgbToHex(255*f(0), 255*f(8), 255*f(4)); }
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 
-/* ---------- paper texture (seeded, cached per size) ---------- */
-function rng(seed){ let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-const texCache = new Map();
-function getTexture(W,H){
-  const key = W + 'x' + H;
-  if (texCache.has(key)) return texCache.get(key);
-  const c = document.createElement('canvas'); c.width = W; c.height = H;
-  const x = c.getContext('2d'); const R = rng(20260929); const s = W/1000;
-
-  const mw = Math.max(8, Math.round(W/24)), mh = Math.max(16, Math.round(H/24));
-  const m = document.createElement('canvas'); m.width = mw; m.height = mh;
-  const mx = m.getContext('2d'); const md = mx.createImageData(mw, mh);
-  for (let i = 0; i < mw*mh; i++){ const v = R() < .5 ? 0 : 255; md.data[i*4] = md.data[i*4+1] = md.data[i*4+2] = v; md.data[i*4+3] = Math.floor(R()*70); }
-  mx.putImageData(md, 0, 0);
-  x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
-  x.globalAlpha = .55; x.drawImage(m, 0, 0, W, H); x.globalAlpha = 1;
-
-  const g = document.createElement('canvas'); g.width = g.height = 256;
-  const gx = g.getContext('2d'); const gd = gx.createImageData(256, 256);
-  for (let i = 0; i < 65536; i++){ const v = R() < .5 ? 0 : 255; gd.data[i*4] = gd.data[i*4+1] = gd.data[i*4+2] = v; gd.data[i*4+3] = Math.floor(R()*36); }
-  gx.putImageData(gd, 0, 0);
-  x.fillStyle = x.createPattern(g, 'repeat'); x.fillRect(0, 0, W, H);
-
-  const n = Math.round(W*H/700);
-  const paths = [new Path2D(), new Path2D(), new Path2D(), new Path2D()];
-  for (let i = 0; i < n; i++){
-    const px = R()*W, py = R()*H, a = R()*Math.PI*2, L = (3 + R()*11)*s, bend = (R() - .5)*L*.8;
-    const ex = px + Math.cos(a)*L, ey = py + Math.sin(a)*L;
-    const cx = (px+ex)/2 - Math.sin(a)*bend, cy = (py+ey)/2 + Math.cos(a)*bend;
-    const p = paths[Math.floor(R()*4)]; p.moveTo(px, py); p.quadraticCurveTo(cx, cy, ex, ey);
-  }
-  x.lineCap = 'round'; x.lineWidth = Math.max(.6, .85*s);
-  x.strokeStyle = 'rgba(255,255,255,.11)'; x.stroke(paths[0]);
-  x.strokeStyle = 'rgba(255,255,255,.06)'; x.stroke(paths[1]);
-  x.strokeStyle = 'rgba(0,0,0,.07)';       x.stroke(paths[2]);
-  x.strokeStyle = 'rgba(0,0,0,.04)';       x.stroke(paths[3]);
-
-  if (texCache.size >= 4) texCache.delete(texCache.keys().next().value);
-  texCache.set(key, c);
-  return c;
+function surfaceLight(ctx,W,top,bottom,k){
+  if (k <= 0) return;
+  const h = bottom-top;
+  // Broad diagonal bands, clipped to each card, with no raster noise.
+  const g = ctx.createLinearGradient(0,top,W,top+Math.min(h,W*.9));
+  [[0,0],[.16,.04],[.32,.08],[.46,.66],[.55,.85],[.67,.10],[.82,0],[1,.12]].forEach(([at,a]) => g.addColorStop(at,rgba('#ffffff',a*k)));
+  ctx.fillStyle=g; ctx.fillRect(0,top,W,h);
+  const shade=ctx.createLinearGradient(0,top,W,top+h*.45);
+  shade.addColorStop(0,rgba('#173451',.10*k)); shade.addColorStop(.45,'rgba(0,0,0,0)'); shade.addColorStop(1,rgba('#173451',.05*k));
+  ctx.fillStyle=shade; ctx.fillRect(0,top,W,h);
 }
-function texture(ctx,W,H,a){ if (a <= 0) return; ctx.save(); ctx.globalAlpha = Math.min(1, a*1.1); ctx.drawImage(getTexture(W,H), 0, 0); ctx.restore(); }
+
 function lighting(ctx,W,H,k){
   if (k <= 0) return;
   const g = ctx.createRadialGradient(W*.2, H*.08, 0, W*.2, H*.08, Math.hypot(W,H)*.95);
@@ -539,22 +758,6 @@ function wrapLines(ctx,text,maxW){
     if (line.trim()) out.push(line.trimEnd());
   }
   return out;
-}
-function drawRule(ctx,x,y,len,th,style,color){
-  if (style === 'none' || len <= 0) return;
-  ctx.save(); ctx.fillStyle = color; ctx.strokeStyle = color;
-  if (style === 'double'){
-    ctx.fillRect(x, y - th*.3, len, Math.max(1, th*.6));
-    ctx.fillRect(x, y + th*.9, len, Math.max(1, th*.6));
-  } else if (style === 'dashed' || style === 'dotted'){
-    ctx.lineWidth = th; ctx.beginPath();
-    if (style === 'dotted'){ ctx.lineCap = 'round'; ctx.setLineDash([.01, th*2.6]); ctx.moveTo(x + th/2, y + th/2); }
-    else { ctx.lineCap = 'butt'; ctx.setLineDash([th*4, th*2.5]); ctx.moveTo(x, y + th/2); }
-    ctx.lineTo(x + len, y + th/2); ctx.stroke();
-  } else {
-    ctx.fillRect(x, y, len, th);
-  }
-  ctx.restore();
 }
 
 function drawIcon(ctx,kind,cx,cy,sz,color){
@@ -593,7 +796,7 @@ function drawIcon(ctx,kind,cx,cy,sz,color){
 }
 
 /* ---------- layout: stacked paper ---------- */
-function stackCard(ctx,W,top,bottom,r,color,k,thick,s){
+function stackCard(ctx,W,top,bottom,r,color,k,thick,s,light=0,visibleTop=0){
   const path = () => rb(ctx, 0, top, W, bottom - top, r);
   if (k > 0){
     ctx.save(); ctx.fillStyle = color;
@@ -608,89 +811,136 @@ function stackCard(ctx,W,top,bottom,r,color,k,thick,s){
   ctx.save(); path(); ctx.clip();
   const vt = Math.max(0, top);
   const g = ctx.createLinearGradient(0, vt, 0, bottom);
-  g.addColorStop(0, 'rgba(255,255,255,.07)'); g.addColorStop(.55, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,.08)');
+  g.addColorStop(0, rgba('#ffffff',.07*light)); g.addColorStop(.55, 'rgba(255,255,255,0)'); g.addColorStop(1, rgba('#000000',.08*light));
   ctx.fillStyle = g; ctx.fillRect(0, vt, W, bottom - vt);
+  surfaceLight(ctx,W,visibleTop,bottom,light*(.25+lum(color)));
   ctx.restore();
 }
-function drawStackText(ctx,W,H,y1,S){
-  const x = W*.097, maxW = W - 2*x, T = W*.056*S.size/100;
-  ctx.fillStyle = S.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-  const title = titleText(S);
-  const yt = y1 + W*.103 + T*.74;
-  if (title){
-    useFont(ctx, fontCss(S.font, 'title', T), title);
-    const tw = ctx.measureText(title).width;
-    if (tw > maxW) useFont(ctx, fontCss(S.font, 'title', T*maxW/tw), title);
-    ctx.fillText(title, x, yt);
-  }
-  const sub = (S.subtitle || '').trim();
-  const hasIcon = S.icon !== 'none';
-  let yr;
-  if (sub || hasIcon){
-    const ys = yt + T*.95;
-    let ex = x;
-    if (sub){
-      useFont(ctx, fontCss(S.sfont, 'body', T*.55), sub);
-      const sw = ctx.measureText(sub).width, room = maxW - (hasIcon ? T*1 : 0);
-      if (sw > room) useFont(ctx, fontCss(S.sfont, 'body', T*.55*room/sw), sub);
-      ctx.fillText(sub, x, ys); ex = x + ctx.measureText(sub).width + T*.32;
-    }
-    if (hasIcon){ const isz = T*.62; drawIcon(ctx, S.icon, ex + isz/2, ys - T*.19, isz, S.ink); }
-    yr = ys + T*1.5;
-  } else {
-    yr = yt + T*.95;
-  }
-  const th = Math.max(1, W*.00105*S.rthick);
-  drawRule(ctx, x, yr, Math.min(maxW, W*S.rlen/100), th, S.rule, S.ink);
-  const q = S.quote || '';
-  if (q.trim()){
-    const fs = T*.37*S.qsize/100;
-    ctx.fillStyle = S.ink;
-    useFont(ctx, fontCss(S.qfont, 'body', fs), q.replace(/\s+/g, ' '));
-    const lines = wrapLines(ctx, q, maxW);
-    const lh = fs*(fontOf(S.qfont).lh || 1.25);
-    let y = S.rule === 'none' ? yr + fs*.9 : yr + Math.max(T*1.08, th*1.6 + fs*1.15);
-    for (const ln of lines){ ctx.fillText(ln, x, y); y += lh; }
-  }
+// Faux bold: a round-joined stroke in the fill colour thickens any face, including single-weight handwriting and Chinese fonts.
+function paintText(ctx,text,x,y,bw){
+  if (bw > 0){ ctx.save(); ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = bw; ctx.lineJoin = 'round'; ctx.strokeText(text,x,y); ctx.restore(); }
+  ctx.fillText(text,x,y);
+}
+const boldPx = (id,px,pct) => px*(fontOf(id).scale || 1)*.06*(pct || 0)/100;
+
+/* "Positive & Confident" traced from the user's reference screenshot, whose font is unidentified.
+   It is a fixed vector title, not a font: l/t/r/b is the ink box, base the baseline, cap the P height. */
+const LETTERING = {l:6, t:6, r:993, b:136, base:109, cap:103, d:'M441.3 5.7Q445 5.3 447.5 5.9Q450 6.5 452.5 8.5Q455 10.4 456.2 12.2Q457.4 14 457.5 16Q457.7 18 456.9 22.5Q456.1 27 451.1 35.5Q446.2 44 447.1 46.2Q448 48.5 453.6 57.7Q459.2 67 460.1 67.8Q461 68.5 462 68.7Q463 68.8 471 65.5Q479 62.3 481 62.1Q483 61.9 483.4 62.5Q483.9 63 481.9 65.1Q480 67.3 474 70.6Q468 74 467.3 75Q466.5 76 466.9 78Q467.3 80 470.9 85Q474.5 90 476 93.5Q477.6 97 477.2 97.5Q476.9 98 475.9 98Q475 98.1 472.5 96.6Q470 95.2 465 89.3Q460 83.4 458.5 82.8Q457 82.3 448.5 86.6Q440.1 91 433.5 95.1Q427 99.2 421.5 101.5Q416 103.8 411 104.9Q406 106.1 401.5 105.7Q397 105.2 395 104.1Q393 102.9 391.8 101.4Q390.6 100 389.6 95.5Q388.6 91 389.4 87.5Q390.2 84 392.4 79.5Q394.6 75 395.9 73Q397.3 71 402.6 65.6Q408 60.2 416.5 54.2Q425 48.2 428.2 45.1Q431.4 42 431.2 40.8Q431 39.5 425.2 30.8Q419.5 22 418.4 19.5Q417.4 17 417.6 16Q417.8 15 418.9 14.9Q420 14.8 422 16Q424 17.2 431 25.3Q438 33.4 439 34Q440 34.5 442.8 31.8Q445.6 29 447.5 25.5Q449.3 22 449.3 19Q449.4 16 447.2 14.3Q445 12.5 442 12Q439 11.4 432.1 12.2Q425.1 13 425.5 12Q425.9 11 427.5 10Q429 8.9 433.3 7.5Q437.6 6 441.3 5.7ZM599.6 7.1Q603 7.1 605.2 9.6Q607.4 12 608.4 17.5Q609.5 23 608.6 29Q607.7 35 606.8 36Q606 36.9 605 36.5Q604 36 603.5 34.5Q603.1 33 602.8 27Q602.6 21 601.5 18.5Q600.4 16 599.2 16Q598 16 588 27.2Q578 38.5 571.5 47.7Q565.1 57 562.5 61.5Q560 66 559 70Q558 74 557.7 79.5Q557.4 85 558 87Q558.6 89 559.8 90.2Q561 91.5 564 91.5Q567 91.5 584 83.1Q601 74.6 602.3 74.8Q603.6 75 603.6 76Q603.6 77 595.8 83.4Q588 89.9 580.5 94.2Q573 98.4 569.5 99.7Q566 100.9 561.5 100.5Q557 100.1 555.5 99Q554 98 552.5 96Q551 94 549.5 90Q548.1 86 548.1 79Q548.1 72 549.2 68Q550.4 64 554.8 55.5Q559.2 47 565.3 39Q571.4 31 581.8 20.5Q592.1 10 594.1 8.5Q596.1 7 599.6 7.1ZM15.2 15.6Q21 15.2 28 16.2Q35 17.2 40.5 19Q46 20.8 51.5 23.6Q57 26.3 60.5 29.2Q63.9 32 68.3 38Q72.7 44 74.4 47.5Q76.2 51 77.8 57Q79.5 63 80.2 62.6Q81 62.1 83 58.6Q85 55.2 87.5 52.1Q90 49.1 93 47Q96 44.9 98.5 44.7Q101 44.5 108.5 46.9Q116 49.2 119.3 53.6Q122.5 58 122.7 64Q123 70 121.6 76Q120.3 82 118 86.5Q115.8 91 112.8 95Q109.8 99 105.9 101.7Q102 104.5 97.5 106.1Q93 107.7 90 107.5Q87 107.4 84.5 105.9Q82 104.5 79.2 99.7Q76.4 95 76 89Q75.7 83 76.6 76.5Q77.6 70 77.3 69.3Q77 68.6 73 70.6Q69 72.7 64.5 73.8Q60 75 53 75.9Q46 76.8 38 76.4Q30 76 29.7 75Q29.4 74 30.2 73.3Q31 72.6 45.5 69.6Q60 66.6 63 65.3Q66 63.9 67.1 62.4Q68.2 61 67.9 58.5Q67.6 56 65 51Q62.5 46 59.1 42Q55.7 38 50.3 34.3Q45 30.5 40.5 28.7Q36 26.9 35 27.5Q34 28 33.6 29Q33.2 30 24.8 60Q16.3 90 13.8 97.5Q11.3 105 10.1 106.6Q9 108.2 7.8 108.1Q6.6 108 6.2 106.5Q5.7 105 6.2 102Q6.6 99 11.9 77Q17.2 55 22.3 41Q27.4 27 26.7 25.4Q26 23.9 17.8 21.4Q9.6 19 9.1 18Q8.6 17 9 16.5Q9.4 16 15.2 15.6ZM752.4 16Q755 16.1 757.2 18Q759.4 20 760 22.5Q760.6 25 759.9 28.5Q759.2 32 758.6 32.9Q758 33.8 756.9 33.9Q755.8 34 755 29.5Q754.2 25 753.6 24.4Q753 23.8 752 24Q751 24.3 746.9 30.6Q742.9 37 737.6 47Q732.4 57 732.7 57.6Q733 58.1 734.5 58Q736 57.9 746.5 53.6Q757 49.3 758.7 49.6Q760.5 50 760.5 51.5Q760.6 53 752.8 58.3Q745 63.6 736.1 67.3Q727.3 71 725.6 72.1Q724 73.3 716 95.1Q708 117 706.5 124.5Q705.1 132 704.5 132.9Q704 133.7 703 133.9Q702 134 701.2 131.5Q700.3 129 700.7 124Q701.2 119 702 113Q702.9 107 707 94.5Q711.1 82 711.5 79.5Q712 77 711.1 75Q710.2 73 710.4 72Q710.6 71 714 68Q717.4 65 722.9 54Q728.5 43 733 36Q737.4 29 741.2 24Q745 19 747.4 17.5Q749.8 16 752.4 16ZM837 24.5Q838 24.1 838.5 24.5Q839 24.9 839.3 26.4Q839.6 28 836.6 40.5Q833.7 53 833.8 54Q833.9 55 834.9 56Q836 57 836.2 58Q836.4 59 833.7 63.5Q831 68 829.6 76Q828.2 84 828.6 84.5Q829 84.9 830 84.4Q831 83.9 833.5 81.1Q836 78.3 838.5 76.5Q841 74.7 842 74.6Q843 74.4 843.4 75.2Q843.9 76 843.4 77.5Q842.9 79 836.5 89Q830 99 827.5 101.2Q825 103.5 824 103.5Q823 103.5 822.2 102.7Q821.3 102 820 99Q818.6 96 818.3 89.6Q818 83.2 817.5 82.8Q817 82.4 805.5 91.4Q794 100.4 789 102.3Q784 104.3 781.5 103.9Q779 103.5 777.2 100.8Q775.3 98 775.6 94Q775.8 90 777.2 86Q778.6 82 782.4 75.5Q786.2 69 793.5 62.5Q800.9 56 805.9 52.9Q811 49.8 815.5 48.2Q820 46.7 822.5 46.9Q825 47.2 826 46.7Q827 46.2 831.5 35.6Q836 25 837 24.5ZM178.1 27.7Q180 27.4 181.5 28Q183 28.6 183.7 29.8Q184.5 31 184.2 32.6Q184 34.1 182 35.2Q180 36.2 178 35.5Q176 34.8 175.2 33.9Q174.3 33 174.1 32Q173.9 31 175.1 29.5Q176.2 28 178.1 27.7ZM238.9 27.7Q241 27.5 242.7 28.2Q244.4 29 245.2 30Q245.9 31 245.6 32.5Q245.2 34 243.6 35.2Q242 36.5 240 35.9Q238 35.3 236.7 33.2Q235.5 31 236.2 29.5Q236.9 28 238.9 27.7ZM774.3 27.8Q776 27.6 778 28.7Q780 29.8 780.5 30.9Q781 32 780.5 33.3Q780 34.7 778 35.6Q776 36.6 774.1 35.8Q772.2 35 771.3 33Q770.3 31 771.5 29.5Q772.6 28 774.3 27.8ZM213.4 32.9Q214 32.7 214.5 33.2Q215 33.7 214.9 35.9Q214.7 38 215.4 39Q216 40 222.3 40Q228.6 40 229.4 40.5Q230.2 41 230.3 42Q230.4 43 229.2 44.1Q228 45.2 220.3 47.6Q212.6 50 210.3 51.5Q208 53 202 66.6Q196 80.3 194 86.1Q192.1 92 191.9 94Q191.8 96 191.9 97.8Q192 99.5 192.5 100.3Q193 101.1 194.5 101.1Q196 101.1 200.5 99.7Q205 98.3 206 98.5Q207 98.7 207.4 99.4Q207.8 100 205.9 102.3Q204 104.6 201.5 106.1Q199 107.5 196.5 108.5Q194 109.5 191.5 109.4Q189 109.3 187.4 108.1Q185.7 107 184.8 105.5Q183.9 104 183.4 100Q182.8 96 183.2 92.5Q183.6 89 185.7 82.5Q187.9 76 192.7 65Q197.5 54 196.8 53.5Q196 53.1 191 52.5Q186 51.9 185.4 51.5Q184.7 51 184.7 50Q184.6 49 185.6 48Q186.5 47 189.3 45.9Q192 44.9 195.9 44.4Q199.8 44 202.4 43Q205 42 208.9 37.5Q212.8 33 213.4 32.9ZM976.8 33.5Q977.6 34 977.8 36.9Q978 39.9 984 40Q990 40.1 991.1 40.5Q992.1 41 992.5 42Q992.9 43 991.9 44.1Q991 45.2 981.9 48.1Q972.9 51 971.4 52.2Q970 53.4 963.5 68.2Q957 83 955.2 90Q953.4 97 953.9 98.5Q954.3 100 955.2 100.6Q956 101.2 961.5 99.7Q967 98.1 968.4 98.6Q969.8 99 970 100Q970.1 101 968.7 102.5Q967.3 104 962.6 106.3Q958 108.7 955 109Q952 109.2 950 108.1Q948.1 107 947.4 106Q946.8 105 946 102.5Q945.2 100 945.2 96Q945.2 92 948 82.5Q950.8 73 955.1 64Q959.3 55 958.6 54Q958 53 953.5 52.4Q949 51.7 947.9 50.4Q946.8 49 947.9 47.8Q949 46.6 958 44.3Q967 42 970 38.5Q973 35 974.5 34Q975.9 33 976.8 33.5ZM143.5 43.6Q145 43.2 148.5 43.4Q152 43.7 154.5 45.4Q157 47 158.8 49.5Q160.5 52 160.4 54Q160.4 56 159.3 58.5Q158.3 61 157.6 61.4Q157 61.8 156.3 61.4Q155.5 61 155 57.5Q154.5 54 152.7 52.6Q151 51.3 148 51.4Q145 51.6 142.8 54.8Q140.6 58 140.8 60Q141.1 62 146.7 74.5Q152.2 87 153 89.5Q153.8 92 153.8 94.5Q153.7 97 152.5 100.5Q151.2 104 148.1 106.8Q145 109.6 140.5 111.2Q136 112.9 131 112.9Q126 112.9 123 111.4Q120 109.8 118.6 106.4Q117.2 103 117.3 101.5Q117.5 100 119.4 96Q121.3 92 122.1 91.7Q123 91.4 123.5 91.8Q124 92.3 123.9 97.1Q123.8 102 124.9 103.2Q126 104.3 128.5 104.5Q131 104.6 134.5 104Q138 103.5 140 102.2Q142 101 142.9 99.5Q143.8 98 143.6 94.5Q143.5 91 139 81Q134.5 71 133.2 65.5Q132 60 132.2 57.5Q132.4 55 133.3 53Q134.2 51 136.1 48.8Q138 46.6 140 45.3Q142 44 143.5 43.6ZM697.2 43.7Q699 43.3 701.9 44.7Q704.9 46 705.3 47.5Q705.7 49 705.7 53.5Q705.7 58 704.7 64Q703.6 70 698.8 84.6Q694 99.3 693 100Q692 100.7 691.4 100.3Q690.7 100 690.5 99Q690.3 98 690.5 93.5Q690.7 89 693.1 76Q695.5 63 695.8 60Q696 57 695.5 56.5Q695 56 691 58.9Q687 61.7 680.5 68.6Q674 75.4 671 77.2Q668 79 665.3 86.5Q662.6 94 661.3 95.9Q660 97.7 659 97.9Q657.9 98 657.1 96Q656.3 94 656.8 89.5Q657.2 85 659.4 74.5Q661.6 64 663.8 58.7Q666 53.5 668 52Q670 50.5 671.1 51.3Q672.2 52 671.1 58.5Q669.9 65 670.5 66.8Q671 68.7 678.5 59.8Q686.1 51 690.7 47.5Q695.4 44 697.2 43.7ZM932.3 43.6Q934 43.3 936 44.1Q938 45 939 46.5Q940.1 48 940.4 49.5Q940.7 51 939.4 60.5Q938.1 70 933.1 85Q928 100 927 100.4Q926 100.7 925.5 100.3Q925 99.8 924.7 96.9Q924.4 94 927.4 76.5Q930.4 59 930.5 58Q930.5 57 929.7 56.5Q929 56 926 58.2Q923 60.4 915.5 68.2Q908 76 905 77.9Q902 79.8 899.1 87.9Q896.2 96 895.1 97.2Q894 98.5 893 98.3Q892 98.2 891.2 96.1Q890.5 94 892 83.5Q893.5 73 897.3 62.7Q901 52.4 902.5 51.4Q904 50.4 905.1 51.2Q906.2 52 906.1 55Q906 58 905 62Q904 66 904.5 67.4Q905 68.7 908.9 63.9Q912.8 59 918.4 53.4Q924 47.7 925.5 46.5Q927 45.3 928.8 44.6Q930.6 44 932.3 43.6ZM247 44.8Q248 44.5 248.8 45.8Q249.6 47 248.5 55Q247.5 63 247.1 73.5Q246.8 84 247.4 88.5Q248.1 93 249 94.3Q250 95.5 251.3 95.3Q252.7 95 254.8 93Q257 91 271.8 73Q286.5 55 287.8 54.4Q289 53.7 290 54.4Q290.9 55 290.7 56Q290.5 57 281.9 71Q273.3 85 269 91Q264.7 97 260.3 100.4Q256 103.9 253 105Q250 106.1 247.5 105.5Q245 104.8 243.5 103.4Q242 102 240.4 98Q238.9 94 238.4 90Q237.9 86 238.5 76.5Q239.1 67 240.7 60Q242.4 53 244.2 49Q246 45 247 44.8ZM317.1 45.3Q320 45.7 323.2 47.8Q326.4 50 327.3 53Q328.3 56 327.6 59Q326.9 62 324.5 65.5Q322.2 69 317.6 73.4Q313 77.8 309 79.7Q305 81.6 299 82.5Q293 83.4 290.8 88.2Q288.5 93 287.6 97Q286.8 101 287.4 101.8Q288 102.6 289 102.8Q290 103 293.2 102Q296.5 101 300.2 99Q303.9 97 313.5 90Q323 82.9 323.7 83.5Q324.5 84 324.1 85.5Q323.8 87 316.4 94.9Q309 102.8 304 105.9Q299 108.9 295 110.1Q291 111.3 288.5 111.3Q286 111.2 284.5 110.6Q283 110.1 281 108.6Q278.9 107 278.2 104.5Q277.5 102 278.1 98Q278.7 94 281.7 86Q284.8 78 288.5 70.5Q292.3 63 295.7 58.5Q299.1 54 303.6 50.6Q308 47.2 311.1 46.1Q314.2 45 317.1 45.3ZM631.3 44.8Q634 44.5 638 45.6Q642 46.6 645 47.7Q648 48.7 649.5 49.9Q651 51.1 652.2 52.6Q653.4 54 654.5 56.5Q655.6 59 656.1 62Q656.6 65 656.2 69Q655.8 73 653.7 79Q651.6 85 647.2 92Q642.9 99 640.4 101.3Q638 103.6 636 104.6Q634 105.6 631 106.6Q628 107.6 625 107.7Q622 107.8 618.7 106.4Q615.4 105 612.9 101.5Q610.5 98 609.7 92Q608.9 86 609.4 81Q609.8 76 610.8 72.5Q611.8 69 614.5 62.5Q617.2 56 623 50.5Q628.7 45 631.3 44.8ZM878.3 45.6Q882 46.1 885.4 48.6Q888.8 51 889.2 53.5Q889.6 56 888.5 59.5Q887.5 63 885.2 66.5Q883 70.1 878.9 74Q874.7 78 870.9 79.8Q867 81.7 861.5 82.2Q856 82.7 855 83.3Q854 83.9 851.4 89.5Q848.8 95 848.8 98.5Q848.7 102 849.9 102.5Q851 103 853 102.7Q855 102.5 860.5 99.8Q866 97 872.5 91.8Q879 86.6 881.5 85.3Q884 84.1 884.5 84.1Q885 84.1 885.1 85Q885.2 86 881.6 90.5Q878.1 95 872 100.3Q866 105.7 860.5 108.3Q855 111 850 110.9Q845 110.8 843 108.9Q840.9 107 839.7 103.5Q838.4 100 842 89Q845.5 78 851.3 68Q857.2 58 861.6 53.6Q866 49.2 870.3 47.1Q874.6 45 878.3 45.6ZM772 47Q773.2 48 772.8 51Q772.4 54 769 67Q765.6 80 764.2 87Q762.8 94 762.8 97Q762.8 100 761.4 100.9Q760 101.9 758.9 100.9Q757.8 100 756.6 96Q755.4 92 756.5 83.5Q757.7 75 760.5 65.5Q763.4 56 766.2 51.5Q769 47 770 46.5Q770.9 46 772 47ZM174.7 47Q176.1 47 176.5 49Q176.8 51 171.5 72.5Q166.3 94 166.3 97Q166.3 100 165.6 100.7Q165 101.5 164 101.6Q163 101.6 162.3 100.8Q161.5 100 160.5 97Q159.5 94 160 87Q160.4 80 163.7 69Q166.9 58 169.1 53.5Q171.3 49 172.3 48Q173.2 47 174.7 47ZM234.3 46.6Q235 46.1 236 46.5Q237 47 237.5 49.5Q238 52 233.1 71Q228.3 90 228 94Q227.7 98 227.2 99Q226.8 100 225.9 100.5Q225 100.9 223.7 100Q222.5 99 221.6 96Q220.6 93 221.1 86.5Q221.5 80 225.2 68Q228.8 56 231.2 51.5Q233.6 47 234.3 46.6ZM437.1 52.1Q438 52.1 439.1 53.1Q440.1 54 444.9 61.5Q449.6 69 450.4 71Q451.3 73 450.8 74.5Q450.3 76 437.6 83Q425 89.9 420 91.9Q415 93.9 410 95Q405 96.1 402.6 95.5Q400.2 95 399.4 93.5Q398.6 92 398.7 90.5Q398.8 89 401.9 83.2Q405 77.4 411.5 70.9Q418 64.4 427.1 58.2Q436.2 52 437.1 52.1ZM822.3 52.5Q823.7 53 824.1 54.5Q824.4 56 822.2 62.2Q820 68.3 808 78.2Q796 88 792.5 90.3Q789 92.6 787.5 92.8Q786 93 785.8 92Q785.5 91 786.3 88.5Q787.1 86 790.3 80Q793.4 74 802.7 65.6Q812 57.2 816.4 54.6Q820.9 52 822.3 52.5ZM104.9 53Q107 52.9 109 54Q111 55 112.5 56.5Q114 58 114.4 60.5Q114.8 63 114.5 67.5Q114.1 72 111.1 79Q108 86.1 105 89.9Q102 93.7 99.5 95.5Q97 97.3 93.1 97.6Q89.2 98 87.7 96.5Q86.3 95 85.5 92Q84.6 89 85.2 80.5Q85.9 72 88.9 64.5Q92 57.1 97.4 55Q102.8 53 104.9 53ZM636.8 52.7Q638 52.4 640 52.9Q642 53.4 644.4 55.7Q646.8 58 647.4 61.5Q648.1 65 647.7 68Q647.2 71 644.6 78Q642 85 639 89Q636.1 93 633.1 95.1Q630 97.2 627 98Q624 98.7 622.1 97.4Q620.2 96 619.3 94.5Q618.4 93 618 89.5Q617.6 86 618.1 80Q618.6 74 620.4 68Q622.2 62 623.8 59.5Q625.4 57 626.7 56Q628 55.1 631.8 54Q635.5 53 636.8 52.7ZM314.9 54.8Q317 54.7 318.1 55.3Q319.3 56 319.2 57.5Q319.1 59 318 61Q317 63.1 313.5 67.4Q310 71.7 306 74.1Q302 76.6 299.6 76.8Q297.2 77 297.1 75.5Q297.1 74 300.1 69.1Q303 64.3 306.2 60.6Q309.3 57 311 56Q312.7 55 314.9 54.8ZM876.9 54.9Q879 54.8 879.9 55.9Q880.8 57 878 62Q875.3 67 872.6 69.7Q870 72.5 867 74.5Q864 76.5 861.3 76.7Q858.6 77 858.3 76.5Q857.9 76 858.1 75Q858.3 74 860.7 69.8Q863 65.5 866.2 61.8Q869.5 58 872.2 56.5Q874.8 55 876.9 54.9Z'};
+let letteringPath = null;
+const letteringScale = px => px*.72/LETTERING.cap;
+function drawLettering(ctx,x,top,k,bw){
+  if (!letteringPath) letteringPath = new Path2D(LETTERING.d);
+  ctx.save(); ctx.translate(x - LETTERING.l*k, top - LETTERING.t*k); ctx.scale(k,k);
+  ctx.fill(letteringPath,'evenodd');
+  if (bw > 0){ ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = bw/k; ctx.lineJoin = 'round'; ctx.stroke(letteringPath); }
+  ctx.restore();
+}
+function drawTracked(ctx,text,x,y,spacing,bw){
+  // Draw as one run so kerning, ligatures and joined script strokes survive; per-glyph drawing is only a fallback.
+  if (!spacing){ paintText(ctx,text,x,y,bw); return; }
+  if ('letterSpacing' in ctx){ ctx.save(); ctx.letterSpacing = spacing + 'px'; paintText(ctx,text,x,y,bw); ctx.restore(); return; }
+  const chars = Array.from(text);
+  const widths = chars.map(ch => ctx.measureText(ch).width);
+  ctx.save(); ctx.translate(x,y);
+  let at = 0;
+  chars.forEach((ch,i) => { paintText(ctx, ch, at, 0, bw); at += widths[i] + spacing; });
+  ctx.restore();
 }
 function renderStack(ctx,W,H,S){
-  const s = W/1000, k = S.shadow/60, r = W*.14*S.radius/100;
-  const y1 = H*S.cut1/100, y2 = H*Math.max(S.cut2, S.cut1 + 6)/100;
-  const thick = 3.2*s*Math.min(1, S.texture/40);
-  ctx.fillStyle = S.c3; ctx.fillRect(0, 0, W, H);
-  stackCard(ctx, W, -r*2, y2, r, S.c2, k, thick, s);
-  stackCard(ctx, W, -r*2, y1, r, S.c1, k, thick, s);
-  lighting(ctx, W, H, S.shadow/100);
-  texture(ctx, W, H, S.texture/100);
-  drawStackText(ctx, W, H, y1, S);
+  const s = W/1000, k = S.shadow/60, r = W*.14*S.radius/100, n = S.layers;
+  const cuts = S.cuts.map(c => H*c/100), cols = rampSlots(n).map(i => S.ramp[i]);
+  const y1 = cuts[n-2], y2 = cuts[n-1];
+  const thick = 1.8*s*S.shadow/100;
+  ctx.fillStyle = S.base; ctx.fillRect(0,0,W,H);
+  // Bottom (text) sheet first, so each sheet above casts its shadow onto the one below.
+  for (let i = n-1; i >= 0; i--) stackCard(ctx,W,-r*2,cuts[i],r,cols[i],k,thick,s,S.light/100,i ? cuts[i-1] : 0);
+  lighting(ctx,W,H,S.shadow/100);
+
+  const x = W*S.inset/100, maxW = W-2*x, area = y2-y1;
+  // Per-section horizontal offsets keep the right margin fixed, so moving a section right narrows its wrap width.
+  const tx = W*S.tx/100, sx = W*S.sx/100, qx = W*S.qx/100;
+  const widthAt = off => Math.max(W*.05, maxW-off);
+  const title = titleText(S), middle = (S.subtitle || '').trim(), last = (S.quote || '').trim();
+  const titlePx = W*.095*S.size/100;
+  const middlePx = W*.052*S.ssize/100;
+  const lastPx = W*.145*S.qsize/100;
+  useFont(ctx,fontCss(S.sfont,'body',middlePx),middle);
+  const middleLines = middle ? wrapLines(ctx,middle,widthAt(sx)) : [];
+  useFont(ctx,fontCss(S.qfont,'body',lastPx),last);
+  const lastLines = last ? wrapLines(ctx,last,widthAt(qx)) : [];
+  const art = !!(title && fontOf(S.font).art), artK = art ? letteringScale(titlePx) : 0;
+  const titleH = !title ? 0 : art ? (LETTERING.b-LETTERING.t)*artK : titlePx*(fontOf(S.font).scale || 1)*1.1;
+  const middleLH = middlePx*(fontOf(S.sfont).scale || 1)*S.leading/100;
+  const lastLH = lastPx*(fontOf(S.qfont).scale || 1)*Math.max(1.25,S.leading/100);
+  const gap1 = title && middleLines.length ? W*S.gap1/100 : 0;
+  const gap2 = middleLines.length && lastLines.length ? W*S.gap2/100 : 0;
+  const contentH = titleH + gap1 + middleLines.length*middleLH + gap2 + lastLines.length*lastLH;
+  const tbw = boldPx(S.font,titlePx,S.tbold), sbw = boldPx(S.sfont,middlePx,S.sbold), qbw = boldPx(S.qfont,lastPx,S.qbold);
+  const baseY = y1 + W*.18*S.textY/100;
+  ctx.save(); ctx.beginPath(); ctx.rect(0,y1,W,area); ctx.clip();
+  ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+  ctx.translate(x,baseY);
+  let y = 0;
+  if (title){
+    ctx.fillStyle = S.tint;
+    if (art) drawLettering(ctx,tx,y,artK,tbw);
+    else { useFont(ctx,fontCss(S.font,'body',titlePx),title); drawTracked(ctx,title,tx,y,W*S.tracking/1000,tbw); }
+    y += titleH+gap1;
+  }
+  if (middleLines.length){
+    ctx.fillStyle = S.sink;
+    useFont(ctx,fontCss(S.sfont,'body',middlePx),middle);
+    middleLines.forEach(line => { paintText(ctx,line,sx,y,sbw); y += middleLH; });
+    y += gap2;
+  }
+  if (lastLines.length){
+    ctx.fillStyle = S.qink;
+    useFont(ctx,fontCss(S.qfont,'body',lastPx),last);
+    lastLines.forEach(line => { paintText(ctx,line,qx,y,qbw); y += lastLH; });
+  }
+  ctx.restore();
+  if (ctx.canvas.id === 'cv'){
+    // Measure each section with its own font, so identical lines in different sections are not confused.
+    const tooWide = (lines,font,spacing,bw,off) => { ctx.font = font; return lines.some(line => x+off-bw/2 < 0 || ctx.measureText(line).width + Math.max(0,Array.from(line).length-1)*spacing + bw > widthAt(off)); };
+    $('layoutWarning').hidden = baseY+contentH <= y2
+      && !(art ? x+tx-tbw/2 < 0 || (LETTERING.r-LETTERING.l)*artK + tbw > widthAt(tx)
+               : tooWide(title ? [title] : [],fontCss(S.font,'body',titlePx),W*S.tracking/1000,tbw,tx))
+      && !tooWide(middleLines,fontCss(S.sfont,'body',middlePx),0,sbw,sx)
+      && !tooWide(lastLines,fontCss(S.qfont,'body',lastPx),0,qbw,qx);
+  }
 }
 
 /* ---------- layout: framed panels ---------- */
 function drawCenterTitle(ctx,cx,cy,size,maxW,S){
-  const t = titleText(S), hasIcon = S.icon !== 'none';
+  const t = titleText(S), hasIcon = S.icon !== 'none', art = !!(t && fontOf(S.font).art);
   const measure = z => {
-    useFont(ctx, fontCss(S.font, 'title', z), t);
-    const tw = t ? ctx.measureText(t).width : 0, isz = z*.62, gap = (t && hasIcon) ? z*.14 : 0;
+    let tw = 0;
+    if (art) tw = (LETTERING.r-LETTERING.l)*letteringScale(z);
+    else { useFont(ctx, fontCss(S.font, 'title', z), t); tw = t ? ctx.measureText(t).width : 0; }
+    const isz = z*.62, gap = (t && hasIcon) ? z*.14 : 0;
     return {tw, isz, gap, total: tw + (hasIcon ? gap + isz : 0)};
   };
   let sz = size, m = measure(sz);
   if (m.total > maxW){ sz = sz*maxW/m.total; m = measure(sz); }
   const x0 = cx - m.total/2, base = cy + sz*.32;
-  ctx.fillStyle = S.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-  if (t) ctx.fillText(t, x0, base);
-  if (hasIcon) drawIcon(ctx, S.icon, x0 + m.tw + m.gap + m.isz/2, base - sz*.62, m.isz, S.ink);
+  ctx.fillStyle = S.tint; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  if (art){ const k = letteringScale(sz); drawLettering(ctx, x0, base - (LETTERING.base-LETTERING.t)*k, k, boldPx(S.font, sz, S.tbold)); }
+  else if (t) paintText(ctx, t, x0, base, boldPx(S.font, sz, S.tbold));
+  if (hasIcon) drawIcon(ctx, S.icon, x0 + m.tw + m.gap + m.isz/2, base - sz*.62, m.isz, S.tint);
 }
-function renderFrame(ctx,W,H,S,three){
+// Panel [top, bottom] in px: fixed outer margins, a fixed gap centred on each split.
+function framePanels(S,H){
+  const b = [FRAME.top, ...S.splits.flatMap(x => [x - FRAME.gap/2, x + FRAME.gap/2]), FRAME.bottom], out = [];
+  for (let i = 0; i < b.length; i += 2) out.push([H*b[i]/100, H*b[i+1]/100]);
+  return out;
+}
+function renderFrame(ctx,W,H,S){
   const k = S.shadow/60, m = W*.047, w = W - 2*m, R = W*.18*S.radius/100, o = W*.011;
-  ctx.fillStyle = S.bg; ctx.fillRect(0, 0, W, H);
-  const line = rgba(mix(S.bg, '#ffffff', .72), .6);
-  const panels = three
-    ? [[.045, .482, S.c1], [.52, .652, S.c2], [.684, .952, S.c3]]
-    : [[.058, .69, null], [.752, .955, S.c3]];
-  for (const [a, b, c] of panels){
-    const y = H*a, h = H*(b - a), r = Math.min(R, h/2, w/2);
-    let fill = c;
-    if (!fill){ fill = ctx.createLinearGradient(0, y, 0, y + h); fill.addColorStop(0, S.c1); fill.addColorStop(.3, S.c1); fill.addColorStop(1, S.c2); }
+  ctx.fillStyle = S.base; ctx.fillRect(0, 0, W, H);
+  const line = rgba(mix(S.base, '#ffffff', .72), .6);
+  const panels = framePanels(S, H), cols = rampSlots(S.panels).map(i => S.ramp[i]);
+  panels.forEach(([y, bottom], i) => {
+    const h = bottom - y, r = Math.min(R, h/2, w/2), fill = cols[i];
     ctx.save(); ctx.lineWidth = Math.max(1, W*.0026); ctx.strokeStyle = line; rr(ctx, m - o, y - o, w + 2*o, h + 2*o, r + o); ctx.stroke(); ctx.restore();
     ctx.save();
     if (k > 0){ ctx.shadowColor = `rgba(0,0,0,${Math.min(.7, .35*k)})`; ctx.shadowBlur = W*.03; ctx.shadowOffsetY = W*.008*k; }
@@ -698,19 +948,20 @@ function renderFrame(ctx,W,H,S,three){
     ctx.save(); rr(ctx, m, y, w, h, r); ctx.clip();
     const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, 'rgba(255,255,255,.06)'); g.addColorStop(1, 'rgba(0,0,0,.06)');
     ctx.fillStyle = g; ctx.fillRect(m, y, w, h);
+    surfaceLight(ctx,W,y,y+h,S.light/100);
     ctx.lineWidth = Math.max(1, W*.002); ctx.strokeStyle = 'rgba(0,0,0,.12)'; rr(ctx, m + .5, y + .5, w - 1, h - 1, r); ctx.stroke();
     ctx.restore();
-  }
+  });
   lighting(ctx, W, H, S.shadow/100*.8);
-  texture(ctx, W, H, S.texture/100);
-  if (three) drawCenterTitle(ctx, W/2, H*.586, W*.13*S.size/100, w*.84, S);
-  else drawCenterTitle(ctx, W/2, H*.605, W*.14*S.size/100, w*.84, S);
+
+  const [ty, tb] = panels[S.titlePanel - 1];
+  drawCenterTitle(ctx, W/2, (ty + tb)/2, W*.13*S.size/100, w*.84, S);
 }
 
 function render(ctx,W,H,S){
   ctx.save(); ctx.clearRect(0, 0, W, H);
   if (S.layout === 'stack') renderStack(ctx, W, H, S);
-  else renderFrame(ctx, W, H, S, S.layout === 'frame3');
+  else renderFrame(ctx, W, H, S);
   ctx.restore();
 }
 
@@ -724,170 +975,344 @@ function getSize(){
 function draw(){
   const [W, H] = getSize();
   if (cv.width !== W || cv.height !== H){ cv.width = W; cv.height = H; }
+  $('layoutWarning').hidden = true;
   render(cx, W, H, st);
 }
 let raf = 0;
 function schedule(){ if (raf) return; raf = requestAnimationFrame(() => { raf = 0; draw(); }); }
 
-/* ---------- presets ---------- */
-const fam = l => l === 'stack' ? 's' : 'f';
-const thumbs = {};
-function buildPresets(){
-  const box = $('presets');
-  for (const p of PRESETS){
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'preset'; b.dataset.id = p.id;
-    const c = document.createElement('canvas'); c.width = 132; c.height = 286;
-    const sp = document.createElement('span'); sp.textContent = p.name;
-    b.append(c, sp); b.addEventListener('click', () => applyPreset(p));
-    box.append(b); thumbs[p.id] = c;
+/* ---------- presets: built-in templates and the user's own ---------- */
+const thumbs = new Map();   // thumbnail canvas → function returning the state it shows
+const PKEY = 'dieka-wallpaper-presets-v1';
+let myPresets = [];
+try {
+  const saved = JSON.parse(localStorage.getItem(PKEY) || '[]');
+  if (Array.isArray(saved)) myPresets = saved.filter(p => p && typeof p.name === 'string' && p.state && typeof p.state === 'object');
+} catch (e) {}
+function storeMyPresets(){ try { localStorage.setItem(PKEY, JSON.stringify(myPresets)); return true; } catch (e) { return false; } }
+
+// A template replaces the look but keeps the text and viewing options.
+function templateState(t){
+  const p = PALETTES.find(x => x.id === t.palette);
+  const S = Object.assign(clone(DEFAULT), p ? paletteColors(p) : {}, {palette:t.palette}, clone(t.style));
+  ['title','subtitle','quote','icon', ...VIEW_KEYS].forEach(k => { S[k] = st[k]; });
+  return normalize(S);
+}
+// A saved preset restores the whole design, text included; only viewing options stay.
+function myPresetState(p){
+  const S = Object.assign(clone(DEFAULT), migrate(clone(p.state)));
+  VIEW_KEYS.forEach(k => { S[k] = st[k]; });
+  return normalize(S);
+}
+function useState(S,msg){ st = S; syncUI(); changed(true); toast(msg); }
+function thumbButton(name,onClick){
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'preset';
+  const c = document.createElement('canvas'); c.width = 132; c.height = 286;
+  const sp = document.createElement('span'); sp.textContent = name;
+  b.append(c, sp); b.addEventListener('click', onClick);
+  return [b, c];
+}
+function buildTemplates(){
+  for (const t of TEMPLATES){
+    const [b, c] = thumbButton(t.name, () => useState(templateState(t), `已套用「${t.name}」`));
+    thumbs.set(c, () => templateState(t)); $('templates').append(b);
   }
 }
-function presetState(p){
-  const S = Object.assign({}, st);
-  for (const k of PRESET_KEYS) if (k in p) S[k] = p[k];
-  S.font = fam(p.layout) === fam(st.layout) ? st.font : p.font;
-  return S;
+function buildMyPresets(){
+  const box = $('myPresets'); box.textContent = '';
+  for (const p of myPresets){
+    const wrap = document.createElement('div'); wrap.className = 'tpl';
+    const [b, c] = thumbButton(p.name, () => useState(myPresetState(p), `已恢复「${p.name}」`));
+    // Deleting takes a second click within three seconds.
+    const del = document.createElement('button'); del.type = 'button'; del.className = 'ghost del'; del.textContent = '删除';
+    del.addEventListener('click', () => {
+      if (!del.dataset.armed){ del.dataset.armed = '1'; del.textContent = '确认删除'; setTimeout(() => { delete del.dataset.armed; del.textContent = '删除'; }, 3000); return; }
+      myPresets.splice(myPresets.indexOf(p), 1); storeMyPresets(); buildMyPresets(); toast(`已删除「${p.name}」`);
+    });
+    wrap.append(b, del); box.append(wrap);
+    thumbs.set(c, () => myPresetState(p));
+  }
+  $('myPresetsEmpty').hidden = myPresets.length > 0;
+  thumbsSoon();
 }
-function renderThumbs(){ for (const p of PRESETS){ const c = thumbs[p.id]; render(c.getContext('2d'), c.width, c.height, presetState(p)); } }
+function savePreset(){
+  const name = $('presetName').value.trim() || `我的预设 ${myPresets.length + 1}`;
+  const state = clone(st); VIEW_KEYS.forEach(k => { delete state[k]; });
+  const old = myPresets.find(p => p.name === name);
+  if (old) old.state = state; else myPresets.push({name, state});
+  const ok = storeMyPresets();
+  $('presetName').value = ''; buildMyPresets();
+  toast(!ok ? '这个浏览器不能长期保存，预设只在本次打开期间有效' : old ? `已更新「${name}」` : `已保存「${name}」`);
+}
+function renderThumbs(){
+  for (const [c, get] of thumbs){
+    if (!c.isConnected){ thumbs.delete(c); continue; }
+    render(c.getContext('2d'), c.width, c.height, get());
+  }
+}
 let thumbT = 0;
 function thumbsSoon(){ clearTimeout(thumbT); thumbT = setTimeout(renderThumbs, 180); }
-function markPresets(){ document.querySelectorAll('.preset').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === st.preset))); }
-function applyPreset(p){
-  const sameFam = fam(p.layout) === fam(st.layout);
-  for (const k of PRESET_KEYS) if (k in p) st[k] = p[k];
-  if (!sameFam) st.font = p.font;
-  st.preset = p.id;
-  syncUI(); changed(true);
+
+/* ---------- palettes ---------- */
+function buildPalettes(){
+  for (const p of PALETTES){
+    const c = paletteColors(p);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'pal'; b.dataset.id = p.id;
+    // A colour chip, not a layout preview: deep, mid and light blocks over the base, text colour on the light block.
+    const chip = document.createElement('span'); chip.className = 'pal-chip'; chip.setAttribute('aria-hidden', 'true');
+    [[c.ramp[0], 3], [c.ramp[2], 1.2], [c.ramp[4], 2.2, 'Aa'], [c.base, 1.3]].forEach(([bg, flex, txt]) => {
+      const i = document.createElement('i'); i.style.background = bg; i.style.flex = flex;
+      if (txt){ i.textContent = txt; i.style.color = c.tint; }
+      chip.append(i);
+    });
+    const nm = document.createElement('span'); nm.textContent = p.name;
+    b.append(chip, nm); b.addEventListener('click', () => applyPalette(p));
+    $('palettes').append(b);
+  }
 }
+function markPalettes(){ document.querySelectorAll('.pal').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === st.palette))); }
+function applyPalette(p){ Object.assign(st, paletteColors(p)); st.palette = p.id; buildColors(); markPalettes(); changed(); }
 function shuffle(){
   const R = Math.random, h = Math.floor(R()*360);
-  if (st.layout === 'stack'){
-    st.c1 = hsl(h, 20 + R()*30, 28 + R()*24);
-    const h2 = (h + (R() < .55 ? 25 + R()*45 : 150 + R()*60)) % 360;
-    st.c2 = hsl(h2, 22 + R()*32, 56 + R()*22);
-    st.c3 = hsl((h + 340) % 360, 6 + R()*16, 15 + R()*12);
-    st.ink = lum(st.c2) > .2 ? mix(st.c3, '#000000', .6) : '#f3ecdc';
-  } else if (st.layout === 'frame3'){
-    st.bg = hsl(h, 18 + R()*14, 20 + R()*8);
-    st.c1 = hsl((h + 20) % 360, 12 + R()*16, 70 + R()*10);
-    st.c2 = hsl(h, 16 + R()*12, 32 + R()*8);
-    st.c3 = hsl(30 + R()*20, 45 + R()*25, 80 + R()*8);
-    st.ink = hsl(40, 60, 87);
-  } else {
-    st.bg = hsl(h, 18 + R()*14, 20 + R()*8);
-    st.c1 = hsl((h + 20) % 360, 10 + R()*14, 72 + R()*10);
-    st.c2 = hsl(h, 14 + R()*14, 46 + R()*10);
-    st.c3 = hsl(h, 10 + R()*12, 62 + R()*10);
-    st.ink = hsl(40, 60, 87);
-  }
-  st.preset = null; buildColors(); markPresets(); changed();
+  const deep = hsl(h, 28 + R()*35, 24 + R()*14), mid = hsl((h + 12) % 360, 22 + R()*25, 46 + R()*12);
+  const light = hsl(R() < .6 ? h : (h + 170 + R()*40) % 360, 25 + R()*25, 84 + R()*8);
+  st.ramp = [deep, mix(deep, mid, .5), mid, mix(mid, light, .5), light];
+  st.base = hsl((h + 30) % 360, 18 + R()*20, 94 + R()*3);
+  st.tint = st.sink = st.qink = deep;
+  st.palette = null; buildColors(); markPalettes(); changed();
 }
 
 /* ---------- font picker ---------- */
 function buildFontGrid(){
   const box = $('fontgrid');
-  for (const g of FONT_GROUPS){
-    const h = document.createElement('div'); h.className = 'fg-head'; h.textContent = g.name; box.append(h);
-    if (g.extra) h.id = 'fg-extra';
+  FONT_GROUPS.forEach((g, gi) => {
+    if (!g.fonts.length) return;
+    const h = document.createElement('div'); h.className = 'fg-head'; h.textContent = g.name; h.id = 'fg-' + gi; box.append(h);
     for (const f of g.fonts){
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'fchip'; b.dataset.id = f.id;
-      if (g.extra){ f.state = 'loading'; b.dataset.state = 'loading'; }
-      const smp = document.createElement('span'); smp.className = 'fs'; smp.style.fontFamily = famCss(f);
+      b.type = 'button'; b.className = 'fchip'; b.dataset.id = f.id; b.dataset.group = gi;
+      if (f.srcs){ f.state = 'loading'; b.dataset.state = 'loading'; }
+      const smp = document.createElement('span'); smp.className = 'fs'; smp.style.fontFamily = famCss(f); smp.style.fontStyle = f.style || "normal";
+      if (f.art){
+        const L = LETTERING, svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', `${L.l} ${L.t} ${L.r-L.l} ${L.b-L.t}`); svg.setAttribute('preserveAspectRatio', 'xMinYMid meet'); svg.setAttribute('aria-hidden', 'true');
+        const p = document.createElementNS(svg.namespaceURI, 'path'); p.setAttribute('d', L.d); p.setAttribute('fill', 'currentColor'); p.setAttribute('fill-rule', 'evenodd');
+        svg.append(p); smp.append(svg);
+      }
       const nm = document.createElement('span'); nm.className = 'fn'; nm.textContent = f.label;
       b.append(smp, nm);
       b.addEventListener('click', () => { st[ftarget] = f.id; markFonts(); updateSamples(); changed(true); });
       box.append(b);
     }
-  }
+  });
 }
 function markFonts(){
   const cur = st[ftarget];
   document.querySelectorAll('.fchip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === cur)));
   $('upper').disabled = !fontOf(st.font).upper;
+  $('letteringNote').hidden = !(ftarget === 'font' && fontOf(st.font).art);
 }
 function updateSamples(){
   const src = ftarget === 'font' ? st.title : ftarget === 'sfont' ? st.subtitle : (st.quote || '').split('\n')[0];
   const base = Array.from((src || '').trim()).slice(0, 14).join('') || 'Aa 字';
   document.querySelectorAll('.fchip').forEach(b => {
     const f = fontOf(b.dataset.id), smp = b.firstChild;
-    smp.textContent = (ftarget === 'font' && st.upper && f.upper) ? base.toUpperCase() : base;
-    smp.style.fontWeight = ftarget === 'font' ? f.wt : f.wb;
+    // The imported lettering keeps its own artwork and only makes sense as a title.
+    if (f.art){ b.hidden = ftarget !== 'font'; return; }
+    smp.textContent =(ftarget === 'font' && st.upper && f.upper) ? base.toUpperCase() : base;
+    // Stacked titles render at the body weight (see renderStack); framed titles use the title weight.
+    smp.style.fontWeight = ftarget === 'font' && st.layout !== 'stack' ? f.wt : f.wb;
   });
 }
 function setTarget(t){
   ftarget = st.layout === 'stack' ? t : 'font';
   document.querySelectorAll('input[name=ftarget]').forEach(r => r.checked = r.value === ftarget);
   markFonts(); updateSamples();
+  document.querySelectorAll('[data-text-target]').forEach(el => { el.hidden = el.dataset.textTarget !== ftarget || (el.dataset.only && !el.dataset.only.split(' ').includes(st.layout)); });
 }
 
 /* ---------- controls ---------- */
+// Colour rows for the current layout; 'ramp.N' keys edit one step of the five-step ramp.
+function colorRows(){
+  const stack = st.layout === 'stack', n = stack ? st.layers : st.panels;
+  const blocks = rampSlots(n).map((slot, i) => ['ramp.' + slot, stack ? (i === n-1 ? `第 ${i+1} 片 · 文字卡片` : `第 ${i+1} 片`) : `第 ${i+1} 格`]);
+  return stack
+    ? [...blocks, ['base','底色'], ['tint','标题文字'], ['sink','第二段文字'], ['qink','第三段文字']]
+    : [['base','背景'], ...blocks, ['tint','标题文字']];
+}
+const getColor = k => k.startsWith('ramp.') ? st.ramp[+k.slice(5)] : st[k];
 function buildColors(){
   const box = $('colors'); box.textContent = '';
-  const labels = COLOR_LABELS[st.layout];
-  for (const k of COLOR_ORDER[st.layout]){
+  for (const [k, label] of colorRows()){
+    const id = k.replace('.', ''), v = getColor(k);
     const row = document.createElement('div'); row.className = 'crow';
-    const ci = document.createElement('input'); ci.type = 'color'; ci.id = 'col-' + k; ci.value = st[k];
-    const lab = document.createElement('label'); lab.htmlFor = ci.id; lab.textContent = labels[k];
-    const hx = document.createElement('input'); hx.type = 'text'; hx.id = 'hex-' + k; hx.className = 'hex';
-    hx.value = st[k].toUpperCase(); hx.maxLength = 7; hx.spellcheck = false; hx.autocomplete = 'off';
-    hx.setAttribute('aria-label', labels[k] + '色值');
+    const ci = document.createElement('input'); ci.type = 'color'; ci.id = 'col-' + id; ci.value = v;
+    const lab = document.createElement('label'); lab.htmlFor = ci.id; lab.textContent = label;
+    const hx = document.createElement('input'); hx.type = 'text'; hx.id = 'hex-' + id; hx.className = 'hex';
+    hx.value = v.toUpperCase(); hx.maxLength = 7; hx.spellcheck = false; hx.autocomplete = 'off';
+    hx.setAttribute('aria-label', label + '色值');
     ci.addEventListener('input', () => { hx.value = ci.value.toUpperCase(); setColor(k, ci.value); });
     hx.addEventListener('input', () => {
       let v = hx.value.trim(); if (!v.startsWith('#')) v = '#' + v;
-      if (/^#[0-9a-f]{6}$/i.test(v)){ v = v.toLowerCase(); ci.value = v; setColor(k, v); }
+      if (HEX.test(v)){ v = v.toLowerCase(); ci.value = v; setColor(k, v); }
     });
     row.append(ci, lab, hx); box.append(row);
   }
 }
-function setColor(k,v){ st[k] = v; if (st.preset){ st.preset = null; markPresets(); } changed(); }
-function outRange(k){ $('o-' + k).textContent = PCT_RANGES.includes(k) ? st[k] + '%' : String(st[k]); }
+function setColor(k,v){
+  if (k.startsWith('ramp.')) st.ramp[+k.slice(5)] = v; else st[k] = v;
+  if (st.palette){ st.palette = null; markPalettes(); }
+  changed();
+}
+// Sliders for sheet bottoms (stack) or panel boundaries (frame); moving one pushes its neighbours.
+function buildBounds(){
+  const stack = st.layout === 'stack', a = stack ? st.cuts : st.splits, n = a.length, box = $('bounds');
+  box.textContent = '';
+  $('boundsTitle').textContent = stack ? '每片的位置' : '框格分界';
+  $('boundsNote').textContent = stack
+    ? '数值是每片下沿到屏幕顶部的距离，最后一片放文字。拖动一条边会推开相邻的边，文字卡片至少露出 8% 屏高。'
+    : '数值是两格分界线到屏幕顶部的距离。拖动会推开相邻的分界，每格至少占 6% 屏高。';
+  a.forEach((v, i) => {
+    const label = stack ? (i === n-1 ? `第 ${i+1} 片（文字卡片）下沿` : `第 ${i+1} 片下沿`) : `第 ${i+1}、${i+2} 格分界`;
+    const row = document.createElement('div'); row.className = 'range';
+    row.innerHTML = `<label for="b-${i}">${label}</label><output id="ob-${i}" for="b-${i}"></output><input type="range" id="b-${i}" min="${stack ? 12 : 10}" max="${stack ? 95 : 90}" step="0.5">`;
+    box.append(row);
+  });
+  syncBounds();
+}
+function syncBounds(){
+  (st.layout === 'stack' ? st.cuts : st.splits).forEach((v, i) => { $('b-' + i).value = v; $('ob-' + i).textContent = +v.toFixed(1) + '%'; });
+}
+function buildTitlePanels(){
+  const box = $('titlePanelSeg'); box.textContent = '';
+  for (let i = 1; i <= st.panels; i++){
+    const l = document.createElement('label');
+    l.innerHTML = `<input type="radio" name="titlePanel" value="${i}"><span>第 ${i} 格</span>`;
+    l.firstChild.checked = i === st.titlePanel;
+    box.append(l);
+  }
+}
+function outRange(k){
+  const v = st[k];
+  $('o-' + k).textContent = k === 'tracking' ? v + '‰ 屏宽'
+    : ['tx','sx','qx'].includes(k) ? (v > 0 ? '+' : '') + v + '% 屏宽'
+    : PCT_RANGES.includes(k) ? v + '%' : String(v);
+}
 function sizeChanged(){
   const [W, H] = getSize(); const ph = $('phone');
   ph.style.setProperty('--ar', String(W/H)); ph.style.aspectRatio = W + ' / ' + H;
+  ph.dataset.cut = (DEVICES.find(d => d.id === st.device) || DEVICES[0]).cut;
   $('dimLabel').textContent = W + ' × ' + H + ' px';
+}
+function previewChanged(){
+  $('lock').hidden = st.preview !== 'lock'; $('home').hidden = st.preview !== 'home'; $('lockOpts').hidden = st.preview !== 'lock';
+  $('lkWidgets').dataset.at = st.widgets;
+  $('lock').style.setProperty('--clock', String(st.clockH/100));
+  $('r-clockH').value = st.clockH; $('o-clockH').textContent = st.clockH + '%';
+  $('clockReset').disabled = st.clockH === 100;
 }
 function syncUI(){
   document.querySelectorAll('input[name=layout]').forEach(r => r.checked = r.value === st.layout);
   document.querySelectorAll('input[name=icon]').forEach(r => r.checked = r.value === st.icon);
-  document.querySelectorAll('input[name=rule]').forEach(r => r.checked = r.value === st.rule);
   $('title').value = st.title; $('subtitle').value = st.subtitle; $('quote').value = st.quote;
   $('upper').checked = !!st.upper;
   RANGES.forEach(k => { $('r-' + k).value = st[k]; outRange(k); });
-  document.querySelectorAll('[data-only]').forEach(el => { el.hidden = st.layout !== el.dataset.only; });
-  buildColors();
+  document.querySelectorAll('[data-only]').forEach(el => { el.hidden = !el.dataset.only.split(' ').includes(st.layout); });
+  document.querySelectorAll('[data-hide]').forEach(el => { el.hidden = el.dataset.hide.split(' ').includes(st.layout); });
+  const count = st.layout === 'stack' ? st.layers : st.panels;
+  document.querySelectorAll('input[name=count]').forEach(r => r.checked = +r.value === count);
+  $('countLbl').textContent = st.layout === 'stack' ? '叠纸片数' : '框格数量';
+  buildBounds(); buildTitlePanels(); buildColors();
   $('device').value = st.device; $('customBox').hidden = st.device !== 'custom';
   $('cw').value = st.cw; $('ch').value = st.ch;
-  $('clock').checked = !!st.clock; $('lock').hidden = !st.clock;
+  ['preview', 'widgets'].forEach(name => document.querySelectorAll(`input[name=${name}]`).forEach(r => r.checked = r.value === st[name]));
+  previewChanged();
   setTarget(ftarget);
-  sizeChanged(); markPresets();
+  $('spacingHelp').hidden = st.layout === 'stack';
+  $('layoutStatus').textContent = '当前版式：' + (st.layout === 'stack' ? `叠纸 · ${st.layers} 片` : `框格 · ${st.panels} 格`);
+  $('versionLabel').textContent = (location.protocol === 'file:' ? '本地 · ' : '') + '09.30 · 叠纸版';
+  sizeChanged(); markPalettes();
 }
 let saveT = 0;
 function persist(){ clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }, 300); }
 function changed(withThumbs){ schedule(); persist(); if (withThumbs) thumbsSoon(); }
 
+function selectEditorTab(key){
+  document.querySelectorAll('[data-tab]').forEach(button => { const active = button.dataset.tab === key; button.setAttribute('aria-selected',String(active)); button.tabIndex = active ? 0 : -1; });
+  document.querySelectorAll('.editor-pane').forEach(pane => { pane.hidden = pane.id !== 'pane-'+key; });
+}
 function bind(){
+  const tabs = [...document.querySelectorAll('[data-tab]')];
+  tabs.forEach((button,i) => {
+    button.addEventListener('click',() => selectEditorTab(button.dataset.tab));
+    button.addEventListener('keydown',e => { let next; if(e.key === 'ArrowRight') next=(i+1)%tabs.length; else if(e.key === 'ArrowLeft') next=(i+tabs.length-1)%tabs.length; else if(e.key === 'Home') next=0; else if(e.key === 'End') next=tabs.length-1; else return; e.preventDefault(); tabs[next].focus(); selectEditorTab(tabs[next].dataset.tab); });
+  });
+  $('useReference').addEventListener('click',() => { st.layout='stack'; syncUI(); changed(true); });
   const sel = $('device');
-  for (const d of DEVICES){ const o = document.createElement('option'); o.value = d.id; o.textContent = d.label; sel.append(o); }
+  const optgroups = {};
+  for (const d of DEVICES){
+    const o = document.createElement('option'); o.value = d.id; o.textContent = deviceLabel(d);
+    if (!d.group){ sel.append(o); continue; }
+    if (!optgroups[d.group]){ optgroups[d.group] = document.createElement('optgroup'); optgroups[d.group].label = d.group; sel.append(optgroups[d.group]); }
+    optgroups[d.group].append(o);
+  }
   document.querySelectorAll('input[name=layout]').forEach(r => r.addEventListener('change', () => {
-    if (!r.checked) return; st.layout = r.value; st.preset = null; syncUI(); changed(true);
+    if (!r.checked) return; st.layout = r.value; syncUI(); changed(true);
   }));
-  ['icon', 'rule'].forEach(name => document.querySelectorAll(`input[name=${name}]`).forEach(r => r.addEventListener('change', () => {
-    if (!r.checked) return; st[name] = r.value; changed(true);
-  })));
+  document.querySelectorAll('input[name=count]').forEach(r => r.addEventListener('change', () => {
+    if (!r.checked) return;
+    const n = +r.value;
+    if (st.layout === 'stack'){ st.layers = n; st.cuts = resizeCuts(st.cuts, n); }
+    else {
+      // A title in the last panel stays in the last panel.
+      const wasLast = st.titlePanel >= st.panels;
+      st.panels = n; st.splits = FRAME_SPLITS[n].slice(); st.titlePanel = wasLast ? n : Math.min(st.titlePanel, n);
+    }
+    syncUI(); changed(true);
+  }));
+  $('bounds').addEventListener('input', e => {
+    const i = +e.target.id.slice(2), a = st.layout === 'stack' ? st.cuts : st.splits;
+    a[i] = +e.target.value;
+    if (st.layout === 'stack') fitCuts(a, i); else fitSplits(a, i);
+    syncBounds(); changed(true);
+  });
+  $('titlePanelSeg').addEventListener('change', e => { st.titlePanel = +e.target.value; changed(true); });
+  $('savePreset').addEventListener('click', savePreset);
+  $('presetName').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); savePreset(); } });
+  document.querySelectorAll('input[name=icon]').forEach(r => r.addEventListener('change', () => {
+    if (!r.checked) return; st.icon = r.value; changed(true);
+  }));
   document.querySelectorAll('input[name=ftarget]').forEach(r => r.addEventListener('change', () => { if (r.checked) setTarget(r.value); }));
   [['title', 'font'], ['subtitle', 'sfont'], ['quote', 'qfont']].forEach(([k, t]) => $(k).addEventListener('input', () => {
     st[k] = $(k).value; changed(true); if (ftarget === t) updateSamples();
   }));
   $('upper').addEventListener('change', () => { st.upper = $('upper').checked; updateSamples(); changed(true); });
-  RANGES.forEach(k => $('r-' + k).addEventListener('input', () => { st[k] = +$('r-' + k).value; outRange(k); changed(k === 'size' || k === 'qsize'); }));
+  RANGES.forEach(k => $('r-' + k).addEventListener('input', () => {
+    st[k] = +$('r-' + k).value;
+    outRange(k); changed(true);
+  }));
   sel.addEventListener('change', () => { st.device = sel.value; $('customBox').hidden = st.device !== 'custom'; sizeChanged(); changed(); });
   ['cw', 'ch'].forEach(k => $(k).addEventListener('change', () => {
     const v = Math.round(+$(k).value); st[k] = clamp(isFinite(v) && v > 0 ? v : 1080, 360, 4096); $(k).value = st[k];
     sizeChanged(); changed();
   }));
-  $('clock').addEventListener('change', () => { st.clock = $('clock').checked; $('lock').hidden = !st.clock; persist(); });
+  // Preview overlays only touch the DOM layer above the canvas, so they persist without redrawing.
+  ['preview', 'widgets'].forEach(name => document.querySelectorAll(`input[name=${name}]`).forEach(r => r.addEventListener('change', () => {
+    if (!r.checked) return; st[name] = r.value; previewChanged(); persist();
+  })));
+  $('r-clockH').addEventListener('input', () => { st.clockH = +$('r-clockH').value; previewChanged(); persist(); });
+  $('clockReset').addEventListener('click', () => { st.clockH = 100; previewChanged(); persist(); });
+  // Dragging the corner handle stretches the clock like the iOS editor; 1% of clock size = 0.1% of phone height.
+  const handle = $('clockHandle');
+  handle.addEventListener('pointerdown', e => {
+    const y0 = e.clientY, v0 = st.clockH, unit = $('phone').getBoundingClientRect().height * .001;
+    if (!(unit > 0)) return;
+    e.preventDefault(); handle.setPointerCapture(e.pointerId);
+    const move = ev => { st.clockH = Math.round(clamp(v0 + (ev.clientY - y0)/unit, 100, 300)); previewChanged(); };
+    const up = () => { handle.removeEventListener('pointermove', move); persist(); };
+    handle.addEventListener('pointermove', move);
+    handle.addEventListener('pointerup', up, {once:true}); handle.addEventListener('pointercancel', up, {once:true});
+  });
   $('shuffle').addEventListener('click', shuffle);
   $('saveBtn').addEventListener('click', onSave);
   $('sheetClose').addEventListener('click', closeSheet);
@@ -895,11 +1320,20 @@ function bind(){
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('sheet').hidden) closeSheet(); });
 }
 
-/* ---------- lock-screen overlay ---------- */
+/* ---------- lock / home screen overlays ---------- */
+const lunarDay = n => n === 10 ? '初十' : n === 20 ? '二十' : n === 30 ? '三十' : ['初','十','廿'][Math.floor(n/10)] + '一二三四五六七八九'[n%10 - 1];
+function lunarDate(d){
+  try {
+    const p = {};
+    new Intl.DateTimeFormat('zh-CN-u-ca-chinese', {year:'numeric', month:'long', day:'numeric'}).formatToParts(d).forEach(x => { p[x.type] = x.value; });
+    return p.yearName && p.month && +p.day ? `${p.yearName}年${p.month}${lunarDay(+p.day)}` : '';
+  } catch (e) { return ''; }
+}
 function tick(){
-  const d = new Date();
-  $('lkTime').textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-  $('lkDate').textContent = `${d.getMonth() + 1}月${d.getDate()}日 星期${'日一二三四五六'[d.getDay()]}`;
+  const d = new Date(), time = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  const lunar = lunarDate(d);
+  $('lkTime').textContent = time; $('hsTime').textContent = time;
+  $('lkDate').textContent = `${d.getMonth() + 1}月${d.getDate()}日周${'日一二三四五六'[d.getDay()]}` + (lunar ? ' · ' + lunar : '');
 }
 
 /* ---------- save ---------- */
@@ -940,7 +1374,7 @@ async function onSave(){
     const [W, H] = getSize();
     const blob = await new Promise(res => cv.toBlob(res, 'image/png'));
     if (!blob){ toast('图片生成失败，请再试一次'); return; }
-    const name = `wallpaper-${st.preset || 'custom'}-${W}x${H}.png`;
+    const name = `wallpaper-${st.palette || 'custom'}-${W}x${H}.png`;
     const dl = await getDownloads();
     if (dl){
       try { await dl.save({filename: name, data: blob}); toast('已保存 ' + name); }
@@ -957,7 +1391,7 @@ async function onSave(){
 }
 
 /* ---------- boot ---------- */
-buildPresets(); buildFontGrid(); bind(); syncUI(); tick(); setInterval(tick, 20000);
+buildTemplates(); buildMyPresets(); buildPalettes(); buildFontGrid(); bind(); syncUI(); tick(); setInterval(tick, 20000);
 draw(); renderThumbs(); getDownloads(); loadFonts();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { schedule(); thumbsSoon(); });
 })();
